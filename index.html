@@ -355,5 +355,54 @@ STANZIOLA</strong>
 	        <p align="center">website design derived from <a href="https://jonbarron.info/">Jon Barron</a>'s public academic website</p>
 
   </body>
+<script>
 
+	// Function to generate a random hex color
+function getRandomColor() {
+  return '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+}
+
+// Function to randomize text color and font
+function randomizeTextStyle() {
+  // Select all text elements you want to modify
+  const textElements = document.querySelectorAll('p, span, h1, h2, a, td');
+  
+  textElements.forEach(element => {
+    // Create a new span for each character
+    const text = element.textContent;
+    element.innerHTML = text.split('').map(char => {
+      // Skip whitespace
+      if (char.trim() === '') return char;
+      
+      // Create a span with random color for each character
+      return `<span style="color: ${getRandomColor()}; font-family: 'Comic Sans MS', cursive;">${char}</span>`;
+    }).join('');
+  });
+}
+
+// Create a clickable element to trigger the text randomization
+function addRandomizerButton() {
+  const button = document.createElement('div');
+  button.textContent = 'make this page weird';
+  button.style.cssText = `
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    cursor: pointer;
+    z-index: 1000;
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
+  `;
+  
+  button.addEventListener('click', randomizeTextStyle);
+  
+  document.body.appendChild(button);
+}
+
+// Add the randomizer button when the page loads
+window.addEventListener('DOMContentLoaded', addRandomizerButton);
+</script>
 </html>
