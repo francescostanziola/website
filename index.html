@@ -356,106 +356,139 @@ STANZIOLA</strong>
   </body>
 	
 <script>
-// Function to create fog and vignette effects
-function createFogVignetteOverlay() {
-  // Create a container for the effects
-  const overlay = document.createElement('div');
-  overlay.id = 'fog-vignette-overlay';
-  overlay.style.cssText = `
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 9999;
-    background: transparent;
-  `;
+// Funzione che randomizza l'opacità del testo
+  function randomizeTextOpacity() {
+    const textElements = document.querySelectorAll("p, span, h2");
+    textElements.forEach((element) => {
+      const randomOpacity = Math.random() * 0.7 + 0.3; // opacità tra 0.3 e 1
+      element.style.transition = "opacity 2s ease";
+      element.style.opacity = randomOpacity;
+    });
+  }
 
-  // Fog effect
-  const fog = document.createElement('div');
-  fog.style.cssText = `
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0.2) 0%,
-      rgba(255, 255, 255, 0.4) 50%,
-      rgba(255, 255, 255, 0.2) 100%
-    );
-    animation: fogMovement 10s infinite linear;
-    opacity: 0.5;
-    mix-blend-mode: overlay;
-  `;
+  // Inizializza l'opacità del testo quando il DOM è pronto
+  window.addEventListener("DOMContentLoaded", () => {
+    const textElements = document.querySelectorAll("p, span, h2");
+    textElements.forEach((element) => {
+      element.style.opacity = 1;
+    });
 
-  // Vignette effect
-  const vignette = document.createElement('div');
-  vignette.style.cssText = `
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    box-shadow: 
-      0 0 200px rgba(0,0,0,0.9) inset,
-      0 0 200px rgba(0,0,0,0.9) inset;
-    pointer-events: none;
-  `;
-
-  // Keyframes for fog movement
-  const fogKeyframes = `
-    @keyframes fogMovement {
-      0% { transform: translateX(0) translateY(0); }
-      50% { transform: translateX(50px) translateY(30px); }
-      100% { transform: translateX(0) translateY(0); }
-    }
-  `;
-
-  // Create a style element for the keyframes
-  const styleSheet = document.createElement('style');
-  styleSheet.textContent = fogKeyframes;
-  document.head.appendChild(styleSheet);
-
-  // Append fog and vignette to overlay
-  overlay.appendChild(fog);
-  overlay.appendChild(vignette);
-
-  // Add overlay to body
-  document.body.appendChild(overlay);
-
-  // Create toggle button
-  const toggleButton = document.createElement('div');
-  toggleButton.textContent = 'Atmospheric turn-on';
-  toggleButton.style.cssText = `
-    position: relative;
-    background-color: white;
-    color: gray;
-    cursor: pointer;
-    z-index: 0;
-    text-align: right;
-    border-radius: 5px;
-    font-family: Arial, sans-serif;
-  `;
-
-  // Toggle functionality
-  let isEffectActive = false;
-  toggleButton.addEventListener('click', () => {
-    isEffectActive = !isEffectActive;
-    overlay.style.display = isEffectActive ? 'block' : 'none';
-    toggleButton.style.backgroundColor = isEffectActive ? 'white' : 'white';
-    toggleButton.textContent = isEffectActive ? 'Atmospheric turn-off' : 'Atmospheric turn-on';
+    createFogVignetteOverlay();
   });
 
-  // Add toggle button to body
-  document.body.appendChild(toggleButton);
-}
+  // Funzione per creare overlay nebbia e vignettatura
+  function createFogVignetteOverlay() {
+    // Crea contenitore per gli effetti
+    const overlay = document.createElement('div');
+    overlay.id = 'fog-vignette-overlay';
+    overlay.style.cssText = `
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      background: transparent;
+    `;
 
-// Initialize the effect when page loads
-window.addEventListener('DOMContentLoaded', createFogVignetteOverlay);
+    // Effetto nebbia
+    const fog = document.createElement('div');
+    fog.style.cssText = `
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.2) 0%,
+        rgba(255, 255, 255, 0.4) 50%,
+        rgba(255, 255, 255, 0.2) 100%
+      );
+      animation: fogMovement 10s infinite linear;
+      opacity: 0.5;
+      mix-blend-mode: overlay;
+    `;
+
+    // Effetto vignettatura
+    const vignette = document.createElement('div');
+    vignette.style.cssText = `
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      box-shadow: 
+        0 0 200px rgba(0,0,0,0.9) inset,
+        0 0 200px rgba(0,0,0,0.9) inset;
+      pointer-events: none;
+    `;
+
+    // Keyframes per il movimento della nebbia
+    const fogKeyframes = `
+      @keyframes fogMovement {
+        0% { transform: translateX(0) translateY(0); }
+        50% { transform: translateX(50px) translateY(30px); }
+        100% { transform: translateX(0) translateY(0); }
+      }
+    `;
+
+    // Stile per le keyframes
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = fogKeyframes;
+    document.head.appendChild(styleSheet);
+
+    // Aggiungo fog e vignettatura all'overlay
+    overlay.appendChild(fog);
+    overlay.appendChild(vignette);
+
+    // Aggiungo overlay al body
+    document.body.appendChild(overlay);
+
+    // Creo il pulsante di toggle
+    const toggleButton = document.createElement('div');
+    toggleButton.textContent = 'Atmospheric turn-on';
+    toggleButton.style.cssText = `
+      position: relative;
+      background-color: white;
+      color: gray;
+      cursor: pointer;
+      z-index: 0;
+      text-align: right;
+      border-radius: 5px;
+      font-family: Arial, sans-serif;
+      margin: 10px;
+      padding: 5px 10px;
+    `;
+
+    let isEffectActive = false;
+    let textInterval;
+
+    toggleButton.addEventListener('click', () => {
+      isEffectActive = !isEffectActive;
+      overlay.style.display = isEffectActive ? 'block' : 'none';
+      toggleButton.textContent = isEffectActive ? 'Atmospheric turn-off' : 'Atmospheric turn-on';
+
+      if (isEffectActive) {
+        // Avvio randomizzazione opacità del testo
+        textInterval = setInterval(randomizeTextOpacity, 5000);
+        randomizeTextOpacity();
+      } else {
+        // Ferma randomizzazione opacità
+        clearInterval(textInterval);
+        // Ripristino opacità iniziale
+        const textElements = document.querySelectorAll("p, span, h2");
+        textElements.forEach((element) => {
+          element.style.opacity = 1;
+        });
+      }
+    });
+
+    // Aggiungo il pulsante al body
+    document.body.appendChild(toggleButton);
+  }
 </script>
 
 </html>
