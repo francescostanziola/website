@@ -430,7 +430,7 @@ function createFogVignetteOverlay() {
 
   // Create toggle button
   const toggleButton = document.createElement('div');
-  toggleButton.textContent = 'Toggle Fog & Vignette';
+  toggleButton.textContent = 'Atmospheric turn-on';
   toggleButton.style.cssText = `
     position: fixed;
     bottom: 20px;
@@ -450,7 +450,7 @@ function createFogVignetteOverlay() {
     isEffectActive = !isEffectActive;
     overlay.style.display = isEffectActive ? 'block' : 'none';
     toggleButton.style.backgroundColor = isEffectActive ? '#f44336' : '#2196F3';
-    toggleButton.textContent = isEffectActive ? 'Disable Fog & Vignette' : 'Toggle Fog & Vignette';
+    toggleButton.textContent = isEffectActive ? 'Atmospheric turn-off' : 'Atmospheric turn-on';
   });
 
   // Add toggle button to body
