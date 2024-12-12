@@ -358,7 +358,7 @@ STANZIOLA</strong>
 <script>
 // Funzione che randomizza l'opacità del testo
   function randomizeTextOpacity() {
-    const textElements = document.querySelectorAll("p, span, h2");
+    const textElements = document.querySelectorAll("p, span, h2, img");
     textElements.forEach((element) => {
       const randomOpacity = Math.random() * 0.7 + 0.3; // opacità tra 0.3 e 1
       element.style.transition = "opacity 2s ease";
