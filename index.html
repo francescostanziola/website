@@ -435,7 +435,7 @@ function createFogVignetteOverlay() {
     position: fixed;
     bottom: 20px;
     left: 20px;
-    background-color: #2196F3;
+    background-color: white;
     color: white;
     padding: 10px 20px;
     cursor: pointer;
@@ -449,7 +449,7 @@ function createFogVignetteOverlay() {
   toggleButton.addEventListener('click', () => {
     isEffectActive = !isEffectActive;
     overlay.style.display = isEffectActive ? 'block' : 'none';
-    toggleButton.style.backgroundColor = isEffectActive ? '#f44336' : '#2196F3';
+    toggleButton.style.backgroundColor = isEffectActive ? 'white' : 'white';
     toggleButton.textContent = isEffectActive ? 'Atmospheric turn-off' : 'Atmospheric turn-on';
   });
 
