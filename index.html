@@ -9,24 +9,127 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="images/favicon/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="stylesheet.css">
-    
+
+    <style>
+      body {
+        margin: 0; padding: 20px;
+        font-family: Arial, sans-serif;
+        transition: background 1s ease, color 1s ease;
+        background: white; /* default background */
+        color: black;
+      }
+
+      /* Button to turn atmospheric box on/off */
+      #atmospheric-button {
+        position: fixed;
+        top: 10px; right: 10px;
+        background: white;
+        color: gray;
+        cursor: pointer;
+        border-radius: 5px;
+        padding: 10px 15px;
+        font-family: Arial, sans-serif;
+        z-index: 10000;
+      }
+
+      /* The box with atmosphere choices */
+      #atmosphere-box {
+        display: none;
+        position: fixed;
+        top: 50px; right: 50px;
+        background: rgba(255,255,255,0.9);
+        color: #333;
+        border-radius: 5px;
+        padding: 20px;
+        z-index: 9999;
+        width: 200px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        font-family: Arial, sans-serif;
+      }
+      #atmosphere-box h3 {
+        margin-top:0;
+        margin-bottom:10px;
+      }
+      #atmosphere-box button {
+        display:block;
+        width:100%;
+        margin:5px 0;
+        cursor:pointer;
+        padding:5px;
+        border:none;
+        border-radius:3px;
+        font-size:14px;
+        font-family:inherit;
+      }
+
+      /* Atmosphere classes */
+      /* Happy */
+      .happy {
+        background: linear-gradient(135deg, #ff9a9e 10%, #fad0c4 30%, #fcb69f 50%, #ff9a9e 70%, #fad0c4 90%);
+        font-family: 'Comic Sans MS', cursive, sans-serif;
+      }
+
+      /* Serene */
+      .serene {
+        background: linear-gradient(to bottom, #a8e6cf, #dcedc1);
+        font-family: Arial, sans-serif; /* default font */
+      }
+
+      /* Cold */
+      .cold {
+        background: linear-gradient(120deg, #e0f7fa, #80deea, #4dd0e1);
+      }
+      .cold .shake {
+        animation: shake 0.5s infinite alternate;
+      }
+
+      /* Dark */
+      .dark {
+        background: linear-gradient(to bottom, #3f0d12, #a71d31);
+      }
+
+      /* The vignette overlay (for cold and dark) */
+      #vignette-overlay {
+        display:none;
+        position: fixed;
+        top:0; left:0;
+        width:100%;
+        height:100%;
+        pointer-events:none;
+        z-index:9998;
+      }
+
+      /* White vignette for cold */
+      .cold #vignette-overlay {
+        background: radial-gradient(ellipse at center, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.8) 100%);
+        display:block;
+      }
+
+      /* Dark vignette */
+      .dark #vignette-overlay {
+        background: radial-gradient(ellipse at center, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.9) 100%);
+        display:block;
+      }
+
+      /* Shake animation for cold mode */
+      @keyframes shake {
+        0% { transform: translate(0,0); }
+        100% { transform: translate(1px, 1px) rotate(1deg); }
+      }
+    </style>
   </head>
 
   <body>
-
-    <!-- Immagine di sfondo -->
-    <div id="imageBackground" style="
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: url('images/pisciotta.jpg');
-      background-size: cover;
-      background-position: center;
-      z-index: -2;
-    "></div>
+    <!-- Added atmospheric button, atmosphere box, and vignette overlay -->
+    <div id="atmospheric-button">Atmospheric turn-on</div>
+    <div id="atmosphere-box">
+      <h3>choose your atmosphere</h3>
+      <button data-mode="happy" style="background:#fcb69f;">happy</button>
+      <button data-mode="serene" style="background:#dcedc1;">serene</button>
+      <button data-mode="cold" style="background:#80deea;">cold</button>
+      <button data-mode="dark" style="background:#a71d31;color:#fff;">dark</button>
+    </div>
+    <div id="vignette-overlay"></div>
 
     <table style="width:100%;max-width:800px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
       <tr style="padding:0px">
@@ -138,10 +241,6 @@
     </p>
       </td>
     </tr>
-
-
-   
-   
 
           </tbody></table>
 
@@ -364,136 +463,102 @@ STANZIOLA</strong>
       
             <p align="center">website design derived from <a href="https://jonbarron.info/">Jon Barron</a>'s public academic website</p>
 
-  </body>
-    
-<script>
-// Funzione che randomizza l'opacità del testo
-function randomizeTextOpacity() {
-  const textElements = document.querySelectorAll("p, span, h2, img");
-  textElements.forEach((element) => {
-    const randomOpacity = Math.random() * 0.7 + 0.3; // opacità tra 0.3 e 1
-    element.style.transition = "opacity 2s ease";
-    element.style.opacity = randomOpacity;
-  });
-}
+  <script>
+  let isAtmosphereOn = false;
+  let currentMode = null;
+  let textInterval = null;
 
-// Inizializza l'opacità del testo quando il DOM è pronto
-window.addEventListener("DOMContentLoaded", () => {
-  const textElements = document.querySelectorAll("p, span, h2, img");
-  textElements.forEach((element) => {
-    element.style.opacity = 1;
-  });
+  // Randomize opacity
+  function randomizeTextOpacity() {
+    const textElements = document.querySelectorAll("p, span, h2, img");
+    textElements.forEach((element) => {
+      const randomOpacity = Math.random() * 0.7 + 0.3;
+      element.style.transition = "opacity 2s ease";
+      element.style.opacity = randomOpacity;
+    });
+  }
 
-  createFogVignetteOverlay();
-});
+  // Reset opacity
+  function resetOpacity() {
+    const textElements = document.querySelectorAll("p, span, h2, img");
+    textElements.forEach((element) => {
+      element.style.opacity = 1;
+      element.style.transition = "";
+    });
+  }
 
-function createFogVignetteOverlay() {
-  // Crea contenitore per gli effetti
-  const overlay = document.createElement('div');
-  overlay.id = 'fog-vignette-overlay';
-  overlay.style.cssText = `
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 9999;
-    background: transparent;
-  `;
+  function removeShake() {
+    const allElements = document.querySelectorAll("p, span, h2, img");
+    allElements.forEach(el => el.classList.remove('shake'));
+  }
 
-  // Effetto nebbia
-  const fog = document.createElement('div');
-  fog.style.cssText = `
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0.2) 0%,
-      rgba(255, 255, 255, 0.4) 50%,
-      rgba(255, 255, 255, 0.2) 100%
-    );
-    animation: fogMovement 10s infinite linear;
-    opacity: 0.5;
-    mix-blend-mode: overlay;
-  `;
+  function addShake() {
+    const allElements = document.querySelectorAll("p, span, h2, img");
+    allElements.forEach(el => el.classList.add('shake'));
+  }
 
-  // Effetto vignettatura
-  const vignette = document.createElement('div');
-  vignette.style.cssText = `
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    box-shadow: 
-      0 0 200px rgba(0,0,0,0.9) inset,
-      0 0 200px rgba(0,0,0,0.9) inset;
-    pointer-events: none;
-  `;
+  const atmosphericButton = document.getElementById('atmospheric-button');
+  const atmosphereBox = document.getElementById('atmosphere-box');
+  const vignetteOverlay = document.getElementById('vignette-overlay');
 
-  const fogKeyframes = `
-    @keyframes fogMovement {
-      0% { transform: translateX(0) translateY(0); }
-      50% { transform: translateX(50px) translateY(30px); }
-      100% { transform: translateX(0) translateY(0); }
-    }
-  `;
+  atmosphericButton.addEventListener('click', () => {
+    isAtmosphereOn = !isAtmosphereOn;
+    atmosphereBox.style.display = isAtmosphereOn ? 'block' : 'none';
+    atmosphericButton.textContent = isAtmosphereOn ? 'Atmospheric turn-off' : 'Atmospheric turn-on';
 
-  const styleSheet = document.createElement('style');
-  styleSheet.textContent = fogKeyframes;
-  document.head.appendChild(styleSheet);
-
-  overlay.appendChild(fog);
-  overlay.appendChild(vignette);
-  document.body.appendChild(overlay);
-
-  // Ottengo il riferimento allo sfondo immagine
-  const imageBackground = document.getElementById('imageBackground');
-
-  // Creo il pulsante di toggle
-  const toggleButton = document.createElement('div');
-  toggleButton.textContent = 'Atmospheric turn-on';
-  toggleButton.style.cssText = `
-    position: relative;
-    background-color: transparent;
-    color: gray;
-    cursor: pointer;
-    z-index: 0;
-    text-align: right;
-    border-radius: 5px;
-    font-family: Arial, sans-serif;
-    margin: 10px;
-    padding: 5px 10px;
-  `;
-
-  let isEffectActive = false;
-  let textInterval;
-
-  toggleButton.addEventListener('click', () => {
-    isEffectActive = !isEffectActive;
-    overlay.style.display = isEffectActive ? 'block' : 'none';
-    imageBackground.style.display = isEffectActive ? 'block' : 'none'; // Mostra/nasconde lo sfondo immagine
-    toggleButton.textContent = isEffectActive ? 'Atmospheric turn-off' : 'Atmospheric turn-on';
-
-    if (isEffectActive) {
-      textInterval = setInterval(randomizeTextOpacity, 5000);
-      randomizeTextOpacity();
-    } else {
+    if (!isAtmosphereOn) {
+      // Reset everything
+      document.body.classList.remove('happy','serene','cold','dark');
+      vignetteOverlay.style.display='none';
+      resetOpacity();
       clearInterval(textInterval);
-      const textElements = document.querySelectorAll("p, span, h2");
-      textElements.forEach((element) => {
-        element.style.opacity = 1;
-      });
+      textInterval = null;
+      currentMode = null;
+      removeShake();
+      document.body.style.fontFamily = 'Arial, sans-serif';
     }
   });
 
-  document.body.appendChild(toggleButton);
-}
-</script>
+  atmosphereBox.addEventListener('click', (e) => {
+    if (e.target.tagName.toLowerCase() === 'button' && e.target.dataset.mode) {
+      const newMode = e.target.dataset.mode;
+      if (currentMode === newMode) return; // already in this mode
 
+      // Remove old classes and resets
+      document.body.classList.remove('happy','serene','cold','dark');
+      vignetteOverlay.style.display='none';
+      resetOpacity();
+      removeShake();
+      clearInterval(textInterval);
+      textInterval = null;
+      document.body.style.fontFamily = 'Arial, sans-serif';
+
+      currentMode = newMode;
+      document.body.classList.add(currentMode);
+
+      if (currentMode === 'happy') {
+        // happy: colorful background, Comic Sans, no vignette, no animations
+        document.body.style.fontFamily = "'Comic Sans MS', cursive, sans-serif";
+      }
+      else if (currentMode === 'serene') {
+        // serene: green gradient, default font, no vignette, opacity randomization
+        textInterval = setInterval(randomizeTextOpacity, 5000);
+        randomizeTextOpacity();
+      }
+      else if (currentMode === 'cold') {
+        // cold: light blue gradient, shaking text, white vignette
+        addShake();
+        // vignette display handled by .cold class CSS
+      }
+      else if (currentMode === 'dark') {
+        // dark: dark gradient, dark vignette, text opacity randomization
+        textInterval = setInterval(randomizeTextOpacity, 5000);
+        randomizeTextOpacity();
+        // vignette handled by .dark class CSS
+      }
+    }
+  });
+  </script>
+
+</body>
 </html>
