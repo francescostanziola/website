@@ -13,6 +13,30 @@
   </head>
 
   <body>
+
+    <!-- SVG Background (inizialmente nascosto) -->
+    <svg id="svgBackground" viewBox="0 0 768 1151" xmlns="http://www.w3.org/2000/svg" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:-2;">
+      <defs>
+        <linearGradient id="skyGradient" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#FFD27F" />
+          <stop offset="30%" stop-color="#F7A45F" />
+          <stop offset="70%" stop-color="#C26A40" />
+          <stop offset="100%" stop-color="#7A3C21" />
+        </linearGradient>
+      </defs>
+      <rect x="0" y="0" width="768" height="1151" fill="url(#skyGradient)" />
+      <path d="M0,500 Q200,480 400,490 T800,500 L800,800 L0,800 Z"
+            fill="rgba(255, 175, 110, 0.15)" />
+      <path d="M0,550 Q200,540 400,560 T800,570 L800,800 L0,800 Z"
+            fill="rgba(255, 150, 90, 0.2)" />
+      <path d="M0,600 Q200,610 400,620 T800,630 L800,900 L0,900 Z"
+            fill="rgba(200, 100, 60, 0.3)" />
+      <path d="M0,650 Q200,670 400,680 T800,690 L800,1000 L0,1000 Z"
+            fill="rgba(150, 70, 45, 0.4)" />
+      <path d="M0,700 Q200,730 400,740 T800,750 L800,1151 L0,1151 Z"
+            fill="rgba(80, 40, 30, 0.8)" />
+    </svg>
+
     <table style="width:100%;max-width:800px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
       <tr style="padding:0px">
         <td style="padding:0px">
@@ -33,7 +57,7 @@
                 </p>
               </td>
               <td style="padding:2.5%;width:37%;max-width:37%">
-                <a href="images/photo.png"><img style="width:100%;max-width:100%;object-fit: cover; alt="profile photo" src="images/photo.png" class="hoverZoomLink"></a>
+                <a href="images/photo.png"><img style="width:100%;max-width:100%;object-fit: cover;" alt="profile photo" src="images/photo.png" class="hoverZoomLink"></a>
 		<p style="color: gray; font-size: 0.8em;">Photo Credit: The very talented Giordano Maria Fortuna</p>
 	      </td>
             </tr>
@@ -368,7 +392,7 @@ STANZIOLA</strong>
 
   // Inizializza l'opacità del testo quando il DOM è pronto
   window.addEventListener("DOMContentLoaded", () => {
-    const textElements = document.querySelectorAll("p, span, h2");
+    const textElements = document.querySelectorAll("p, span, h2, img");
     textElements.forEach((element) => {
       element.style.opacity = 1;
     });
@@ -376,7 +400,6 @@ STANZIOLA</strong>
     createFogVignetteOverlay();
   });
 
-  // Funzione per creare overlay nebbia e vignettatura
   function createFogVignetteOverlay() {
     // Crea contenitore per gli effetti
     const overlay = document.createElement('div');
@@ -426,7 +449,6 @@ STANZIOLA</strong>
       pointer-events: none;
     `;
 
-    // Keyframes per il movimento della nebbia
     const fogKeyframes = `
       @keyframes fogMovement {
         0% { transform: translateX(0) translateY(0); }
@@ -435,17 +457,16 @@ STANZIOLA</strong>
       }
     `;
 
-    // Stile per le keyframes
     const styleSheet = document.createElement('style');
     styleSheet.textContent = fogKeyframes;
     document.head.appendChild(styleSheet);
 
-    // Aggiungo fog e vignettatura all'overlay
     overlay.appendChild(fog);
     overlay.appendChild(vignette);
-
-    // Aggiungo overlay al body
     document.body.appendChild(overlay);
+
+    // Ottengo il riferimento allo sfondo SVG
+    const svgBackground = document.getElementById('svgBackground');
 
     // Creo il pulsante di toggle
     const toggleButton = document.createElement('div');
@@ -469,16 +490,14 @@ STANZIOLA</strong>
     toggleButton.addEventListener('click', () => {
       isEffectActive = !isEffectActive;
       overlay.style.display = isEffectActive ? 'block' : 'none';
+      svgBackground.style.display = isEffectActive ? 'block' : 'none'; // Mostra/nasconde lo sfondo SVG
       toggleButton.textContent = isEffectActive ? 'Atmospheric turn-off' : 'Atmospheric turn-on';
 
       if (isEffectActive) {
-        // Avvio randomizzazione opacità del testo
         textInterval = setInterval(randomizeTextOpacity, 5000);
         randomizeTextOpacity();
       } else {
-        // Ferma randomizzazione opacità
         clearInterval(textInterval);
-        // Ripristino opacità iniziale
         const textElements = document.querySelectorAll("p, span, h2");
         textElements.forEach((element) => {
           element.style.opacity = 1;
@@ -486,7 +505,6 @@ STANZIOLA</strong>
       }
     });
 
-    // Aggiungo il pulsante al body
     document.body.appendChild(toggleButton);
   }
 </script>
