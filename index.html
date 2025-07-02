@@ -754,73 +754,70 @@
       });
 
 
-      (function(){
-  // 1) crea e posiziona il canvas a tutta pagina
-  const w = window.innerWidth;
-  const h = window.innerHeight;
-  const canvas = document.createElement('canvas');
-  canvas.id = 'grain-canvas';
-  canvas.width = w; canvas.height = h;
-  Object.assign(canvas.style, {
-    position: 'fixed',
-    top: 0, left: 0,
-    width: '100vw', height: '100vh',
-    pointerEvents: 'none',
-    zIndex: 9999,
-    background: 'transparent',
-    opacity: 1       // regola qui, ad es. 0.8 o 0.6 se è troppo forte
-  });
-  document.body.appendChild(canvas);
-  const ctx = canvas.getContext('2d');
-
-  // 2) funzione per ridisegnare la grana
-  function drawNoise(alphaValue = 30) {
-    const img = ctx.createImageData(w, h);
-    for (let i = 0; i < img.data.length; i += 4) {
-      const v = Math.random() * 255;
-      img.data[i]     = v;
-      img.data[i + 1] = v;
-      img.data[i + 2] = v;
-      img.data[i + 3] = alphaValue; // 0–255: più alto = grana più visibile
+(function(){
+  function initGrain(){
+    // 1) genera un tile di rumore 256×256
+    const size = 256;
+    const tile = document.createElement('canvas');
+    tile.width = tile.height = size;
+    const tctx = tile.getContext('2d');
+    const data = tctx.createImageData(size, size);
+    for(let i=0; i<data.data.length; i+=4){
+      const v = Math.random()*255;
+      data.data[i] = data.data[i+1] = data.data[i+2] = v;
+      data.data[i+3] = 30; // α = 30/255, aumenta se serve più contrasto
     }
-    ctx.putImageData(img, 0, 0);
+    tctx.putImageData(data,0,0);
+    const noiseURL = tile.toDataURL();
+
+    // 2) crea il div-overlay che scorrerà con la pagina
+    const grain = document.createElement('div');
+    grain.id = 'grain-overlay';
+    Object.assign(grain.style, {
+      position: 'absolute',
+      top: '0', left: '0',
+      width:  document.documentElement.scrollWidth + 'px',
+      height: document.documentElement.scrollHeight + 'px',
+      pointerEvents: 'none',
+      backgroundImage: `url(${noiseURL})`,
+      backgroundRepeat: 'repeat',
+      mixBlendMode: 'overlay',
+      zIndex: 9999
+    });
+    document.body.appendChild(grain);
+
+    // 3) funzione per “aprire” il buco radiale al passaggio
+    let tid;
+    function reveal(x, y){
+      clearTimeout(tid);
+      const r = 120; // raggio buco
+      const mask = `radial-gradient(circle ${r}px at ${x}px ${y}px, transparent 0%, black 100%)`;
+      grain.style.webkitMaskImage = mask;
+      grain.style.maskImage      = mask;
+      // dopo 2s rimuovi la maschera
+      tid = setTimeout(()=>{
+        grain.style.webkitMaskImage = '';
+        grain.style.maskImage      = '';
+      }, 2000);
+    }
+
+    // 4) event listeners: usiamo pageX/Y perché l’overlay scorre
+    document.addEventListener('mousemove', e => reveal(e.pageX, e.pageY));
+    document.addEventListener('touchmove',  e => {
+      const t = e.touches[0];
+      reveal(t.pageX, t.pageY);
+    });
+
+    // 5) mantieni le dimensioni aggiornate al resize
+    window.addEventListener('resize', () => {
+      grain.style.width  = document.documentElement.scrollWidth  + 'px';
+      grain.style.height = document.documentElement.scrollHeight + 'px';
+    });
   }
 
-  // 3) disegna la grana una volta all’avvio
-  drawNoise(30);
-
-  // 4) al passaggio del mouse/touch: apri il “buco” radiale
-  let timeoutId;
-  function reveal(x, y) {
-    clearTimeout(timeoutId);
-    // ripristina il rumore completo
-    drawNoise(30);
-    // crea il “foro”: togli pixel tramite compositing
-    ctx.globalCompositeOperation = 'destination-out';
-    const r = 120; // raggio in pixel
-    const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
-    grad.addColorStop(0, 'rgba(0,0,0,1)');
-    grad.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = grad;
-    ctx.fillRect(x - r, y - r, r * 2, r * 2);
-    // torna al compositing normale
-    ctx.globalCompositeOperation = 'source-over';
-    // dopo 2s ridisegna la grana intera
-    timeoutId = setTimeout(() => drawNoise(30), 2000);
-  }
-
-  window.addEventListener('mousemove', e => reveal(e.clientX, e.clientY));
-  window.addEventListener('touchmove',  e => {
-    const t = e.touches[0];
-    reveal(t.clientX, t.clientY);
-  });
-
-  // 5) opzionale: ridisegna se ridimensioni la finestra
-  window.addEventListener('resize', () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    drawNoise(30);
-  });
+  // init anche se il DOM è già pronto
+  if (document.readyState !== 'loading') initGrain();
+  else document.addEventListener('DOMContentLoaded', initGrain);
 })();
       
       
