@@ -2,525 +2,739 @@
 <html lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
     <title>Francesco Stanziola</title>
-
     <meta name="author" content="Francesco Stanziola">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="images/favicon/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     
+    <style>
+      :root {
+        --black: #000000;
+        --white: #ffffff;
+        --red: #ff0000;
+        --yellow: #ffff00;
+        --blue: #0000ff;
+        --gray-light: #f5f5f5;
+        --gray-medium: #cccccc;
+        --gray-dark: #333333;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: var(--white);
+        color: var(--black);
+        line-height: 1.4;
+        font-weight: 400;
+      }
+
+      .mono {
+        font-family: 'JetBrains Mono', monospace;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0;
+      }
+
+      /* Header brutalist style */
+      .header {
+        background: var(--black);
+        color: var(--white);
+        padding: 4rem 2rem;
+        position: relative;
+      }
+
+      .header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 8px;
+        background: var(--red);
+      }
+
+      .header-content {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        gap: 4rem;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      .name {
+        font-size: clamp(3rem, 8vw, 8rem);
+        font-weight: 700;
+        line-height: 0.8;
+        margin-bottom: 2rem;
+        text-transform: uppercase;
+        letter-spacing: -0.05em;
+      }
+
+      .tagline {
+        font-size: 1.2rem;
+        font-weight: 300;
+        margin-bottom: 2rem;
+        max-width: 60ch;
+      }
+
+      .upv-notice {
+        background: var(--yellow);
+        color: var(--black);
+        padding: 1rem 1.5rem;
+        margin: 2rem 0;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border: 3px solid var(--black);
+        display: inline-block;
+        font-size: 0.9rem;
+      }
+
+      .contact {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .links {
+        display: flex;
+        gap: 0;
+        flex-wrap: wrap;
+      }
+
+      .link {
+        background: var(--white);
+        color: var(--black);
+        padding: 1rem 2rem;
+        text-decoration: none;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        border: 3px solid var(--black);
+        margin-right: -3px;
+        margin-bottom: -3px;
+        transition: all 0.1s ease;
+        position: relative;
+        z-index: 1;
+      }
+
+      .link:hover {
+        background: var(--red);
+        color: var(--white);
+        z-index: 10;
+        transform: translate(-5px, -5px);
+        box-shadow: 5px 5px 0 var(--black);
+      }
+
+      .profile-section {
+        align-self: start;
+        margin-top: 2rem;
+      }
+
+      .profile-image {
+        width: 100%;
+        border: 5px solid var(--white);
+        display: block;
+        filter: grayscale(100%) contrast(120%);
+        transition: all 0.3s ease;
+      }
+
+      .profile-image:hover {
+        filter: grayscale(0%) contrast(100%);
+        transform: scale(1.02);
+      }
+
+      .photo-credit {
+        background: var(--blue);
+        color: var(--white);
+        padding: 0.5rem;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-top: -5px;
+      }
+
+      /* Content sections */
+      .content {
+        padding: 0;
+      }
+
+      .section {
+        border-bottom: 8px solid var(--black);
+        padding: 4rem 2rem;
+        position: relative;
+      }
+
+      .section:nth-child(even) {
+        background: var(--gray-light);
+      }
+
+      .section-title {
+        font-size: clamp(2rem, 5vw, 4rem);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
+        margin-bottom: 3rem;
+        position: relative;
+      }
+
+      .section-title::before {
+        content: attr(data-number);
+        position: absolute;
+        left: -2rem;
+        top: 0;
+        font-size: 8rem;
+        font-weight: 700;
+        color: var(--gray-medium);
+        z-index: -1;
+        line-height: 0.6;
+      }
+
+      .research-text {
+        font-size: 1.3rem;
+        line-height: 1.6;
+        max-width: 80ch;
+        font-weight: 300;
+      }
+
+      /* Publications grid */
+      .publications-grid {
+        display: grid;
+        gap: 0;
+        border: 3px solid var(--black);
+      }
+
+      .publication {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        border-bottom: 3px solid var(--black);
+        transition: all 0.2s ease;
+      }
+
+      .publication:last-child {
+        border-bottom: none;
+      }
+
+      .publication:hover {
+        background: var(--yellow);
+      }
+
+      .pub-image {
+        background: var(--gray-medium);
+        border-right: 3px solid var(--black);
+        min-height: 200px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .pub-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: grayscale(100%) contrast(120%);
+        transition: all 0.3s ease;
+      }
+
+      .publication:hover .pub-image img {
+        filter: grayscale(0%) contrast(100%);
+        transform: scale(1.1);
+      }
+
+      .pub-content {
+        padding: 2rem;
+      }
+
+      .pub-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: -0.01em;
+      }
+
+      .pub-title a {
+        color: var(--black);
+        text-decoration: none;
+      }
+
+      .pub-title a:hover {
+        color: var(--red);
+      }
+
+      .pub-authors {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        line-height: 1.6;
+      }
+
+      .pub-authors strong {
+        background: var(--black);
+        color: var(--white);
+        padding: 0.2rem 0.4rem;
+      }
+
+      .pub-venue {
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+      }
+
+      .pub-description {
+        font-size: 1rem;
+        line-height: 1.5;
+      }
+
+      /* Events section */
+      .events-list {
+        display: grid;
+        gap: 0;
+        border: 3px solid var(--black);
+      }
+
+      .event {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        border-bottom: 3px solid var(--black);
+        transition: all 0.2s ease;
+      }
+
+      .event:last-child {
+        border-bottom: none;
+      }
+
+      .event:hover {
+        background: var(--blue);
+        color: var(--white);
+      }
+
+      .event-date {
+        background: var(--red);
+        color: var(--white);
+        padding: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-right: 3px solid var(--black);
+      }
+
+      .event-content {
+        padding: 2rem;
+        display: flex;
+        align-items: center;
+      }
+
+      .event-content p {
+        font-size: 1.1rem;
+        line-height: 1.5;
+      }
+
+      .event-content strong {
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      /* Position/Education sections */
+      .position-grid {
+        display: grid;
+        gap: 3rem;
+      }
+
+      .position {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 2rem;
+        padding: 2rem;
+        border: 3px solid var(--black);
+        background: var(--white);
+        transition: all 0.2s ease;
+      }
+
+      .position:hover {
+        transform: translate(-5px, -5px);
+        box-shadow: 5px 5px 0 var(--black);
+      }
+
+      .position-image {
+        width: 100%;
+        height: 150px;
+        object-fit: contain;
+        border: 2px solid var(--black);
+        padding: 1rem;
+        background: var(--white);
+      }
+
+      .position-content h3 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+        letter-spacing: -0.01em;
+      }
+
+      .position-content p {
+        margin-bottom: 0.8rem;
+        line-height: 1.5;
+      }
+
+      .position-content strong {
+        font-weight: 700;
+      }
+
+      /* Interests section */
+      .interests {
+        background: var(--black);
+        color: var(--white);
+        position: relative;
+      }
+
+      .interests::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 8px;
+        background: var(--yellow);
+      }
+
+      .interests-content {
+        font-size: 1.2rem;
+        line-height: 1.6;
+        font-weight: 300;
+      }
+
+      .interests-content p {
+        margin-bottom: 2rem;
+      }
+
+      .interests-content a {
+        color: var(--yellow);
+        text-decoration: none;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .interests-content a:hover {
+        background: var(--yellow);
+        color: var(--black);
+        padding: 0.2rem 0.4rem;
+      }
+
+      /* Footer */
+      .footer {
+        background: var(--gray-dark);
+        color: var(--white);
+        padding: 2rem;
+        text-align: center;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.9rem;
+      }
+
+      .footer a {
+        color: var(--yellow);
+        text-decoration: none;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .header-content {
+          grid-template-columns: 1fr;
+          gap: 2rem;
+        }
+
+        .name {
+          font-size: 3rem;
+        }
+
+        .section-title::before {
+          display: none;
+        }
+
+        .publication {
+          grid-template-columns: 1fr;
+        }
+
+        .pub-image {
+          border-right: none;
+          border-bottom: 3px solid var(--black);
+          height: 200px;
+        }
+
+        .event {
+          grid-template-columns: 1fr;
+        }
+
+        .event-date {
+          border-right: none;
+          border-bottom: 3px solid var(--black);
+        }
+
+        .position {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+
+        .position-image {
+          height: 100px;
+        }
+
+        .links {
+          flex-direction: column;
+        }
+
+        .link {
+          margin-right: 0;
+        }
+      }
+
+      /* Animations */
+      @keyframes slide-in {
+        from {
+          transform: translateX(-100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      .slide-in {
+        animation: slide-in 0.6s ease-out;
+      }
+    </style>
   </head>
 
   <body>
-
-    <!-- Immagine di sfondo -->
-    <div id="imageBackground" style="
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: url('');
-      background-size: cover;
-      background-position: center;
-      z-index: -2;
-    "></div>
-
-    <table style="width:100%;max-width:800px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-      <tr style="padding:0px">
-        <td style="padding:0px">
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-            <tr style="padding:0px">
-              <td style="padding:2.5%;width:63%;vertical-align:middle">
-                <p class="name" style="text-align: center;">
-                  Francesco Stanziola
-                </p>
-                <p>I am a PhD student at Sapienza University of Rome, enrolled in the program of History, Representation, and Restoration of Architecture, within the Representation curriculum.
-                <p>
-                   email: francesco.stanziola [at] uniroma1.it
-                </p>
-                <p style="text-align:center">
-                  <a href="https://scholar.google.com/citations?user=MQ1LYBgAAAAJ&hl">Scholar</a> &nbsp;/&nbsp;
-                  <a href="https://orcid.org/0009-0000-3542-5015">OrcID</a> &nbsp;/&nbsp;
-                  <a href="https://phd.uniroma1.it/web/FRANCESCO-STANZIOLA_nP1961859_IT.aspx">Sapienza</a> 
-                </p>
-                <p>📍 visitng at <strong>UPV - Universitat Politècnica de València</strong> from march to july 2025!</p>
-              </td>
-              <td style="padding:2.5%;width:37%;max-width:37%">
-                <a href="images/photo.png"><img style="width:100%;max-width:100%;object-fit: cover;" alt="profile photo" src="images/photo.png" class="hoverZoomLink"></a>
-                <p style="color: gray; font-size: 0.8em;">Photo Credit: The very talented Giordano Maria Fortuna</p>
-              </td>
-            </tr>
-          </tbody></table>
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-              <tr>
-              <td style="padding:16px;width:100%;vertical-align:middle">
-                <h2>Research</h2>
-                <p>
-                 My research focuses on the digitization and representation of architectural cultural heritage. I primarily work with laser scanning, photogrammetry, and I am exploring methods of neural rendering.
-                 <br>Additionally, my academic interests extend to graphic design and visual communication.
-                </p>
-               
-              </td>
-            </tr>
-          </tbody></table>
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-              <tr>
-              <td style="padding:16px;width:100%;vertical-align:middle">
-                <h2>Publications</h2>
-               </td>
-            </tr>
-          </tbody></table>
-        
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-
-    <tr>
-      <td style="padding:16px;width:20%;vertical-align:middle">
-        <div class="one">
-            <img src='images/lexicon2.jpg' width="160">
-        </div>
-       
-      </td>
-      <td style="padding:8px;width:80%;vertical-align:middle">
-        <a href="https://doi.org/10.1007/978-3-031-61245-9_2">
-            <span class="papertitle">Representing Cantàfora’s Visions of the City</span>
-        </a>
-        <br>
-                <a href="https://scholar.google.com/citations?user=_9GTru8AAAAJ&hl=it">Alfonso Ippolito</a>,
-                <a href="https://www.iulm.it/en/iulm/ateneo/docenti-e-collaboratori/mezzino-davide">Davide Mezzino</a>,
-                <a href="https://research.uniroma1.it/researcher/efa4d9c87575d031463460dafe276267326dcbb9e33923f98a324b7e">Francesca Porfiri</a>,
-                Vittoria Castiglione,
-                Rawan Darwa,
-                Giordano Maria Fortuna,
-                Giulia Luffarelli,
-                <strong>Francesco Stanziola</strong>,
-                
-        <br>
-        <em>Contemporary Heritage Lexicon, Vol. 2</em>, 2024
-        <br>
-        <a href="https://doi.org/10.1007/978-3-031-61245-9_2">Chapter</a>
-       
-        <p></p>
-        <p>
-            The contribution examines the artistic work of Arduino Cantàfora from an architectural point of view. It focuses on the use of digital tools to virtualize his iconic painting Città Analoga.
-        </p>
-      </td>
-<br>    </tr>
-
-   <tr >
-      <td style="padding:16px;width:20%;vertical-align:middle">
-        <div class="one">
-            <img src='images/fiumefreddo2.png' width="160">
-        </div>
-       
-      </td>
-      <td style="padding:8px;width:80%;vertical-align:middle">
-        <a href="https://doi.org/10.3280/oa-1180-c627">
-            <span class="papertitle">La bellezza che cura va tutelata. Fiumefreddo Bruzio e Salvatore Fiume</span>
-        </a>
-        <br>
-                <a href="https://scholar.google.com/citations?user=_9GTru8AAAAJ&hl=it">Alfonso Ippolito</a>,
-                <a href="https://scholar.google.it/citations?user=9cmiq50AAAAJ&hl=en">Martina Attenni</a>,
-                Rawan Darwa,
-                Nada Mokhtar Ahmed,
-                Giordano Maria Fortuna,
-                <strong>Francesco Stanziola</strong>,
-                
-        <br>
-        <em>Misura / Dismisura | Measure / Out of Measure - UID</em>, 2024
-        <br>
-        <a href="https://doi.org/10.3280/oa-1180-c627">Chapter</a>
-       
-        <p></p>
-        <p>
-        Extensive digitization and analisys of architectural heritage in a medieval village of Southern Italy
-    </p>
-      </td>
-    </tr>
-
-               <tr >
-      <td style="padding:16px;width:20%;vertical-align:middle">
-        <div class="one">
-            <img src="" width="160">
-        </div>
-       
-      </td>
-      <td style="padding:8px;width:80%;vertical-align:middle">
-        <a href="https://doi.org/10.1109/SYNASC65383.2024.00058">
-            <span class="papertitle">Graphic Design for Architectural Serious Games</span>
-        </a>
-        <br>
-                Stefano Costantini, Giordano Maria Fortuna, Elisa Guarino, Alessia Mazzei, Arianna Moretti, Esterletizia Pompeo,
-                <strong>Francesco Stanziola</strong>,
-                
-        <br>
-        <em>International Symposium on Symbolic and Numeric Algorithms for Scientific Computing (SYNASC)</em>, 2024
-        <br>
-        <a href="https://doi.org/10.1109/SYNASC65383.2024.00058">Chapter</a>
-       
-        <p></p>
-        <p>
-        This study highlights the role of architects in the gamification of cultural heritage, with a focus on Palazzo Barberini
-    </p>
-      </td>
-    </tr>
-
-   
-   
-
-          </tbody></table>
-
-<!--- events and presentations -->          
-                    <table style="width:100%; margin:0 auto; border:0; border-spacing:0; padding:16px;"><tbody>
-            <tr>
-              <td>
-                <h2>Events and presentations</h2>
-              </td>
-            </tr>
-          </tbody></table>
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+    <div class="container">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-content">
+          <div>
+            <h1 class="name slide-in">Francesco<br>Stanziola</h1>
+            <p class="tagline">PhD student at Sapienza University of Rome, enrolled in the program of History, Representation, and Restoration of Architecture, within the Representation curriculum.</p>
+            
+            <div class="upv-notice">
+              In 2025, I will be frequently visiting the Polytechnic University of Valencia (UPV), Heritage Restoration University Research Institute (IRP)
+            </div>
+            
+            <div class="contact">
+              EMAIL: francesco.stanziola [at] uniroma1.it
+            </div>
+            
+            <div class="links">
+              <a href="https://scholar.google.com/citations?user=MQ1LYBgAAAAJ&hl" class="link">Scholar</a>
+              <a href="https://orcid.org/0009-0000-3542-5015" class="link">OrcID</a>
+              <a href="https://phd.uniroma1.it/web/FRANCESCO-STANZIOLA_nP1961859_IT.aspx" class="link">Sapienza</a>
+            </div>
+          </div>
           
-       <tr>
-              <td align="left" style="padding:16px;width:20%;vertical-align:middle">
-                             <div class="colored-box" style="background-color: #D3D3D3;">
-                                <b>03 december 2024</b>
-                                 </div>
-              </td>
-              <td>
-               online event with AJAC Associação Jauense de Ambiente e Cultura, presenting the <strong> <a href="https://www.instagram.com/knowit_prin2022/">KNOW.it PRIN project</a></strong> directed by prof. Alfonso Ippolito
-              </td>
-            </tr>
-          
-       <tr>
-              <td align="left" style="padding:16px;width:20%;vertical-align:middle">
-                             <div class="colored-box" style="background-color: #D3D3D3;">
-                                <b>31 october - 03 november 2024</b>
-                                 </div>
-              </td>
-              <td>
-               workshop of integrated architectural digitization in <strong>Centola (SA)</strong>, directed by Alfonso Ippolito and Martina Attenni
-              </td>
-            </tr>
-             
-            <tr>
-              <td align="left" style="padding:16px;width:20%;vertical-align:middle">
-                             <div class="colored-box" style="background-color: #D3D3D3;">
-                                <b>08-09 october 2024</b>
-                                 </div>
-              </td>
-              <td>
-               presentation of <strong>XR in Serious Games. An Application on Palazzo Barberini</strong> at <a href="https://www.reaach.eu/symposium-2024/">REAACH 2024 symposium</a>, authors: S. Costantini, G. M. Fortuna, E. Guarino, A.
-Mazzei, A. Moretti, E. Pompeo, <strong>F. Stanziola</strong>
-              </td>
-            </tr>
-    
-    <tr>
-              <td align="left" style="padding:16px;width:20%;vertical-align:middle">
-                             <div class="colored-box" style="background-color: #D3D3D3;">
-                                <b>18 september 2024</b>
-                                 </div>
-              </td>
-              <td>
-               presentation of <strong>Graphic design for architectural serious games</strong> at <a href="https://easychair.org/smart-program/SYNASC2024/2024-09-18.html">SYNASC 2024</a>, authors: S. Costantini (presenter), G. M. Fortuna, E. Guarino, A.
-Mazzei, A. Moretti, E. Pompeo, <strong>F. Stanziola</strong>
-              </td>
-            </tr>
-
-    <tr>
-              <td align="left" style="padding:16px;width:20%;vertical-align:middle">
-                             <div class="colored-box" style="background-color: #D3D3D3;">
-                                <b>12 september 2024</b>
-                                 </div>
-              </td>
-              <td>
-               presentation of <strong>La bellezza che cura va tutelata: Fiumefreddo Bruzio e Salvatore Fiume</strong> at <a href="https://www.unioneitalianadisegno.it/convegni/2024/wp-content/uploads/2024/09/Programma_UID_8-sett.pdf">UID 2024</a>, authors: A. IPPOLITO, M. ATTENNI ; N. M. AHMED, R. DARWA, G. M. FORTUNA,  <strong>F.
-STANZIOLA</strong>
-              </td>
-            </tr>
-    <tr>
-              <td align="left" style="padding:16px;width:20%;vertical-align:middle">
-                             <div class="colored-box" style="background-color: #D3D3D3;">
-                                <b>17 november 2023</b>
-                                 </div>
-              </td>
-              <td>
-               presentation of <strong>Open-Source and Low-Cost Digitization of Architectural Heritage: the case study of San Severino di Centola</strong> at <a href="https://www.eventi.enea.it/tutti-gli-eventi-enea/3rd-italy-korea-symposium.html">The 3rd Italy-Korea Symposium on Disaster Prevention and Preservation of Cultural Heritage using Advanced ICT Technology</a>, author: <strong>F.
-STANZIOLA</strong>
-              </td>
-            </tr>
-          
-<td><br></td>
-          </tbody></table>
-
-<!-- events and presentation END -->
-<!-- current position  -->
-
-         <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-              <tr>
-              <td style="padding:16px;width:100%;vertical-align:middle">
-                <h2>Current position</h2>
-               </td>
-            </tr>
-          </tbody></table>
-        
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-
-
-    <tr>
-      <td style="padding:16px;width:20%;vertical-align:middle">
-        <div class="one">
-            <img src='images/dsdra.jpg' width="160">
+          <div class="profile-section">
+            <img src="images/photo.png" alt="Francesco Stanziola" class="profile-image">
+            <div class="photo-credit">Photo: Giordano Maria Fortuna</div>
+          </div>
         </div>
-       
-      </td>
-      <td style="padding:8px;width:80%;vertical-align:middle">
-            <span class="papertitle"> Sapienza University of Rome - Department of History, Representation and Restoration of Architecture
-</span>
-        <br>     
-                <p><strong>PhD student</strong> in the program of History, Representation and Restoration of Architecture
-          Curriculum Representation (Disegno)
-        </p>      
- 
-              <p>My supervisors are Alfonso Ippolito and Martina Attenni</p>
-                
-        <p>Rome, Italy</p>
-    <p>2023 - ongoing (XXXIX Ciclo)</p>
-      </td>
-    </tr>
+      </header>
 
-          </tbody></table> 
+      <!-- Content -->
+      <main class="content">
+        <!-- Research -->
+        <section class="section">
+          <h2 class="section-title" data-number="01">Research</h2>
+          <div class="research-text">
+            <p>My research focuses on the digitization and representation of architectural cultural heritage. I primarily work with laser scanning, photogrammetry, and I am exploring methods of neural rendering. Additionally, my academic interests extend to graphic design and visual communication.</p>
+          </div>
+        </section>
 
-<!-- current position END -->
-<!-- education  -->
+        <!-- Publications -->
+        <section class="section">
+          <h2 class="section-title" data-number="02">Publications</h2>
+          <div class="publications-grid">
+            <div class="publication">
+              <div class="pub-image">
+                <img src="images/lexicon2.jpg" alt="Publication">
+              </div>
+              <div class="pub-content">
+                <h3 class="pub-title">
+                  <a href="https://doi.org/10.1007/978-3-031-61245-9_2">Representing Cantàfora's Visions of the City</a>
+                </h3>
+                <div class="pub-authors">
+                  Alfonso Ippolito, Davide Mezzino, Francesca Porfiri, Vittoria Castiglione, Rawan Darwa, Giordano Maria Fortuna, Giulia Luffarelli, <strong>Francesco Stanziola</strong>
+                </div>
+                <div class="pub-venue">Contemporary Heritage Lexicon, Vol. 2, 2024</div>
+                <p class="pub-description">The contribution examines the artistic work of Arduino Cantàfora from an architectural point of view. It focuses on the use of digital tools to virtualize his iconic painting Città Analoga.</p>
+              </div>
+            </div>
 
-         <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-              <tr>
-              <td style="padding:16px;width:100%;vertical-align:middle">
-                <h2>Education</h2>
-               </td>
-            </tr>
-          </tbody></table>
+            <div class="publication">
+              <div class="pub-image">
+                <img src="images/fiumefreddo2.png" alt="Publication">
+              </div>
+              <div class="pub-content">
+                <h3 class="pub-title">
+                  <a href="https://doi.org/10.3280/oa-1180-c627">La bellezza che cura va tutelata. Fiumefreddo Bruzio e Salvatore Fiume</a>
+                </h3>
+                <div class="pub-authors">
+                  Alfonso Ippolito, Martina Attenni, Rawan Darwa, Nada Mokhtar Ahmed, Giordano Maria Fortuna, <strong>Francesco Stanziola</strong>
+                </div>
+                <div class="pub-venue">Misura / Dismisura | Measure / Out of Measure - UID, 2024</div>
+                <p class="pub-description">Extensive digitization and analysis of architectural heritage in a medieval village of Southern Italy</p>
+              </div>
+            </div>
+
+            <div class="publication">
+              <div class="pub-image">
+                <div style="background: var(--red); height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.2rem;">SYNASC</div>
+              </div>
+              <div class="pub-content">
+                <h3 class="pub-title">
+                  <a href="https://doi.org/10.1109/SYNASC65383.2024.00058">Graphic Design for Architectural Serious Games</a>
+                </h3>
+                <div class="pub-authors">
+                  Stefano Costantini, Giordano Maria Fortuna, Elisa Guarino, Alessia Mazzei, Arianna Moretti, Esterletizia Pompeo, <strong>Francesco Stanziola</strong>
+                </div>
+                <div class="pub-venue">SYNASC, 2024</div>
+                <p class="pub-description">This study highlights the role of architects in the gamification of cultural heritage, with a focus on Palazzo Barberini</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Events -->
+        <section class="section">
+          <h2 class="section-title" data-number="03">Events & Presentations</h2>
+          <div class="events-list">
+            <div class="event">
+              <div class="event-date">03<br>Dec<br>2024</div>
+              <div class="event-content">
+                <p>Online event with AJAC Associação Jauense de Ambiente e Cultura, presenting the <strong>KNOW.it PRIN project</strong> directed by prof. Alfonso Ippolito</p>
+              </div>
+            </div>
+
+            <div class="event">
+              <div class="event-date">31 Oct<br>03 Nov<br>2024</div>
+              <div class="event-content">
+                <p>Workshop of integrated architectural digitization in <strong>Centola (SA)</strong>, directed by Alfonso Ippolito and Martina Attenni</p>
+              </div>
+            </div>
+
+            <div class="event">
+              <div class="event-date">08-09<br>Oct<br>2024</div>
+              <div class="event-content">
+                <p>Presentation of <strong>XR in Serious Games. An Application on Palazzo Barberini</strong> at REAACH 2024 symposium</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Current Position -->
+        <section class="section">
+          <h2 class="section-title" data-number="04">Current Position</h2>
+          <div class="position-grid">
+            <div class="position">
+              <img src="images/dsdra.jpg" alt="Sapienza University" class="position-image">
+              <div class="position-content">
+                <h3>Sapienza University of Rome</h3>
+                <p><strong>PhD student</strong> in the program of History, Representation and Restoration of Architecture, Curriculum Representation (Disegno)</p>
+                <p>Supervisors: Alfonso Ippolito and Martina Attenni</p>
+                <p><strong>Rome, Italy | 2023 - ongoing (XXXIX Ciclo)</strong></p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Education -->
+        <section class="section">
+          <h2 class="section-title" data-number="05">Education</h2>
+          <div class="position-grid">
+            <div class="position">
+              <img src="images/Uniroma1_v.png" alt="Sapienza University" class="position-image">
+              <div class="position-content">
+                <h3>Sapienza University of Rome</h3>
+                <p><strong>M.Arch in Architettura (Restauro)</strong></p>
+                <p><strong>borgoaperto.it</strong> was developed as part of my master thesis, aimed to provide an open source and low cost digitization strategy for a small abandoned village in southern Italy.</p>
+                <p><strong>Rome, Italy | 2023</strong></p>
+              </div>
+            </div>
+
+            <div class="position">
+              <img src="images/Logo_Politecnico_Milano.png" alt="Politecnico di Milano" class="position-image">
+              <div class="position-content">
+                <h3>Politecnico di Milano</h3>
+                <p><strong>B.Arch in Progettazione dell'Architettura</strong></p>
+                <p><strong>Milan, Italy | 2020</strong></p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Interests -->
+        <section class="section interests">
+          <h2 class="section-title" data-number="06">Other Interests</h2>
+          <div class="interests-content">
+            <p>I am passionate about electronic music, as a DJ and producer/remixer... hopelessly nerding out over synthesizers and vinyl records. Follow me on <a href="https://soundcloud.com/moltofico">SoundCloud</a>.</p>
+            
+            <p>I love scuba diving and often enjoy the stunning waters of <a href="https://www.google.com/search?q=palinuro+diving&udm=2">Palinuro</a>. I'm also very interested in undertaking a research project on underwater surveying.</p>
+            
+            <p>I'm enthusiastic about all things that fly (I'm also a drone pilot) and thanks to my amazing brother and his fantastic wife, I recently had the incredible opportunity to fly (and land!) <a href="images/aereo.jpg">a four-seat single-engine piper aircraft</a>!</p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer class="footer">
+      <p>WEBSITE DESIGN INSPIRED BY <a href="https://jonbarron.info/">JON BARRON</a> / BRUTALIST INTERPRETATION</p>
+    </footer>
+
+    <script>
+      // Add hover sound effect simulation
+      document.querySelectorAll('.publication, .event, .position').forEach(element => {
+        element.addEventListener('mouseenter', () => {
+          element.style.transform = element.classList.contains('position') 
+            ? 'translate(-5px, -5px)' 
+            : 'translateX(10px)';
+        });
         
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-
-
-    <tr>
-      <td style="padding:16px;width:20%;vertical-align:middle">
-        <div class="one">
-            <img src='images/Uniroma1_v.png' width="160">
-        </div>
-       
-      </td>
-      <td style="padding:8px;width:80%;vertical-align:middle">
-            <span class="papertitle"> Sapienza University of Rome
-</span>
-        <br>  
-                <strong>M.Arch in Architettura (Restauro)</strong>
-                
-        <br>
-             <br>  
-                <strong><a href="https://borgoaperto.it/mediawiki/index.php/Pagina_principale">borgoaperto.it</a></strong> was developed as part of my master thesis, it is aimed to provide an open source and low cost digitization strategy for a small abandoned village in southern Italy,
-          <p>My supervisor was Alfonso Ippolito and my co-supervisor was Martina Attenni</p>
-                
-        <p>Rome, Italy</p>
-    <p>2023</p>
-      </td>
-    </tr>
-
-    <tr>
-      <td style="padding:16px;width:20%;vertical-align:middle">
-        <div class="one">
-            <img src='images/Logo_Politecnico_Milano.png' width="160">
-        </div>
-       
-      </td>
-      <td style="padding:8px;width:80%;vertical-align:middle">
-            <span class="papertitle"> Politecnico di Milano
-</span>
-        <br>  
-                <strong>B.Arch in Progettazione dell'Architettura</strong>
-                
-        <br>
-        <p>Milan, Italy</p>
-    <p>2020</p>
-
-      </td>
-    </tr>
-
-
-          </tbody></table> 
-
-<!-- education END -->
-
-<!-- other interests  -->
-
-         <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-              <tr>
-              <td style="padding:16px;width:100%;vertical-align:middle">
-                <h2>Other interests and hobbies</h2>
-               </td>
-            </tr>
-          </tbody></table>
-        
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-
-
-    <tr>
-      <td colspan="2" style="padding:16px;width:20%;vertical-align:middle">
-       <span> I am passionate about electronic music, as a dj and producer/remixer... hopelessly nerding out over synthesizers and vinyl records. If you wish you can follow me on <a href="https://soundcloud.com/moltofico">soundcloud.</a>
-       </span>
-<p>I love scuba diving and often enjoy the stunning waters of <a href="https://www.google.com/search?sca_esv=da052a448206c26a&rlz=1C1ONGR_itIT1077IT1077&sxsrf=ADLYWIL3mZNC4HwLauvgvya5EwBSempIyA:1733827784128&q=palinuro+diving&udm=2&fbs=AEQNm0Be9hsxO5zOUoY5v2srYNPRIvTz_02aG-_CVE5t-hWDE6W1VjpbTSIBckKE9TyWOFFRtFNW8rpCtNHLM5EEmxbH8at1KWtisFxypQp7lq62u0T0KZ5Ni3VPsZV7YS9ophPrD4863YXWMJ1D2AFn_TkscbL5DIshIwrRuW8p_XIW0a3A49I&sa=X&ved=2ahUKEwjVwrLpg52KAxVKywIHHSZzIIgQtKgLegQIFxAB&biw=1420&bih=1448&dpr=0.9">Palinuro</a>. I’m also very interested in undertaking a research project on underwater surveying.</p>
-    <p>I'm enthusiastic about all things that fly (I'm also a drone pilot) and thanks to my amazing brother and his fantastic wife, I recently had the incredible opportunity to fly (and land :P ) <a href="images/aereo.jpg">a four-seat single-engine piper aircraft</a>!</p>
-      </td>
-
-    </tr>
-
-    <tr>
-    </tr>
-
-
-          </tbody></table> 
-
-<!-- other interests END-->
-        
-        </td>
-      </tr>
-    </table>
-      
-            <p align="center">website design derived from <a href="https://jonbarron.info/">Jon Barron</a>'s public academic website</p>
-
-  </body>
-    
-<script>
-// Funzione che randomizza l'opacità del testo
-function randomizeTextOpacity() {
-  const textElements = document.querySelectorAll("p, span, h2");
-  textElements.forEach((element) => {
-    const randomOpacity = Math.random() * 0.7 + 0.3; // opacità tra 0.3 e 1
-    element.style.transition = "opacity 2s ease";
-    element.style.opacity = randomOpacity;
-  });
-}
-
-// Inizializza l'opacità del testo quando il DOM è pronto
-window.addEventListener("DOMContentLoaded", () => {
-  const textElements = document.querySelectorAll("p, span, h2");
-  textElements.forEach((element) => {
-    element.style.opacity = 1;
-  });
-
-  createFogVignetteOverlay();
-});
-
-function createFogVignetteOverlay() {
-  // Crea contenitore per gli effetti
-  const overlay = document.createElement('div');
-  overlay.id = 'fog-vignette-overlay';
-  overlay.style.cssText = `
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 9999;
-    background: transparent;
-  `;
-
-  // Effetto nebbia
-  const fog = document.createElement('div');
-  fog.style.cssText = `
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0.2) 0%,
-      rgba(255, 255, 255, 0.4) 50%,
-      rgba(255, 255, 255, 0.2) 100%
-    );
-    animation: fogMovement 10s infinite linear;
-    opacity: 0.5;
-    mix-blend-mode: overlay;
-  `;
-
-  // Effetto vignettatura
-  const vignette = document.createElement('div');
-  vignette.style.cssText = `
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    box-shadow: 
-      0 0 200px rgba(0,0,0,0.9) inset,
-      0 0 200px rgba(0,0,0,0.9) inset;
-    pointer-events: none;
-  `;
-
-  const fogKeyframes = `
-    @keyframes fogMovement {
-      0% { transform: translateX(0) translateY(0); }
-      50% { transform: translateX(50px) translateY(30px); }
-      100% { transform: translateX(0) translateY(0); }
-    }
-  `;
-
-  const styleSheet = document.createElement('style');
-  styleSheet.textContent = fogKeyframes;
-  document.head.appendChild(styleSheet);
-
-  overlay.appendChild(fog);
-  overlay.appendChild(vignette);
-  document.body.appendChild(overlay);
-
-  // Ottengo il riferimento allo sfondo immagine
-  const imageBackground = document.getElementById('imageBackground');
-
-  // Creo il pulsante di toggle
-  const toggleButton = document.createElement('div');
-  toggleButton.textContent = 'Atmospheric turn-on';
-  toggleButton.style.cssText = `
-    position: relative;
-    background-color: transparent;
-    color: gray;
-    cursor: pointer;
-    z-index: 0;
-    text-align: right;
-    border-radius: 5px;
-    font-family: Arial, sans-serif;
-    margin: 10px;
-    padding: 5px 10px;
-  `;
-
-  let isEffectActive = false;
-  let textInterval;
-
-  toggleButton.addEventListener('click', () => {
-    isEffectActive = !isEffectActive;
-    overlay.style.display = isEffectActive ? 'block' : 'none';
-    imageBackground.style.display = isEffectActive ? 'block' : 'none'; // Mostra/nasconde lo sfondo immagine
-    toggleButton.textContent = isEffectActive ? 'Atmospheric turn-off' : 'Atmospheric turn-on';
-
-    if (isEffectActive) {
-      textInterval = setInterval(randomizeTextOpacity, 5000);
-      randomizeTextOpacity();
-    } else {
-      clearInterval(textInterval);
-      const textElements = document.querySelectorAll("p, span, h2");
-      textElements.forEach((element) => {
-        element.style.opacity = 1;
+        element.addEventListener('mouseleave', () => {
+          element.style.transform = 'none';
+        });
       });
-    }
-  });
 
-  document.body.appendChild(toggleButton);
-}
-</script>
+      // Intersection observer for animations
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      }, { threshold: 0.1 });
 
+      document.querySelectorAll('.section').forEach(section => {
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(50px)';
+        section.style.transition = 'all 0.6s ease';
+        observer.observe(section);
+      });
+    </script>
+  </body>
 </html>
