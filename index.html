@@ -454,6 +454,20 @@
         text-decoration: none;
       }
 
+      #grain-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    pointer-events: none;
+    background-repeat: repeat;
+    /* scegli uno dei due: */
+    /* mix-blend-mode: overlay;  */
+    /* oppure: */
+    mix-blend-mode: normal;
+    opacity: 0.15;
+    z-index: 9999;
+  }
+
       /* Responsive */
       @media (max-width: 768px) {
         .header-content {
@@ -521,6 +535,9 @@
       .slide-in {
         animation: slide-in 0.6s ease-out;
       }
+      #grain-canvas {
+    mix-blend-mode: multiply;
+  }
     </style>
   </head>
 
@@ -735,59 +752,78 @@
         section.style.transition = 'all 0.6s ease';
         observer.observe(section);
       });
-      // 1) Creiamo in volo un canvas full-screen con rumore fine
-function createNoiseDataURL() {
-  const size = 256; // più grande = rumore meno “ripetuto”
+
+
+      (function(){
+  // 1) crea e posiziona il canvas a tutta pagina
+  const w = window.innerWidth;
+  const h = window.innerHeight;
   const canvas = document.createElement('canvas');
-  canvas.width = canvas.height = size;
+  canvas.id = 'grain-canvas';
+  canvas.width = w; canvas.height = h;
+  Object.assign(canvas.style, {
+    position: 'fixed',
+    top: 0, left: 0,
+    width: '100vw', height: '100vh',
+    pointerEvents: 'none',
+    zIndex: 9999,
+    background: 'transparent',
+    opacity: 1       // regola qui, ad es. 0.8 o 0.6 se è troppo forte
+  });
+  document.body.appendChild(canvas);
   const ctx = canvas.getContext('2d');
-  const img = ctx.createImageData(size, size);
-  for (let i = 0; i < img.data.length; i += 4) {
-    const v = Math.random() * 255; // valore grigio casuale
-    img.data[i] = img.data[i+1] = img.data[i+2] = v;
-    img.data[i+3] = 8; // opacità bassa per rumore sottile
+
+  // 2) funzione per ridisegnare la grana
+  function drawNoise(alphaValue = 30) {
+    const img = ctx.createImageData(w, h);
+    for (let i = 0; i < img.data.length; i += 4) {
+      const v = Math.random() * 255;
+      img.data[i]     = v;
+      img.data[i + 1] = v;
+      img.data[i + 2] = v;
+      img.data[i + 3] = alphaValue; // 0–255: più alto = grana più visibile
+    }
+    ctx.putImageData(img, 0, 0);
   }
-  ctx.putImageData(img, 0, 0);
-  return canvas.toDataURL();
-}
 
-// 2) Creiamo e stiliamo il layer di rumore
-const grain = document.createElement('div');
-grain.id = 'grain-overlay';
-Object.assign(grain.style, {
-  position: 'fixed',
-  top: 0, left: 0,
-  width: '100vw', height: '100vh',
-  pointerEvents: 'none',
-  backgroundImage: `url(${createNoiseDataURL()})`,
-  backgroundRepeat: 'repeat',
-  mixBlendMode: 'overlay',
-  zIndex: 9999,
-  // nessuna maschera all’inizio: rumore pieno
-});
-document.body.appendChild(grain);
+  // 3) disegna la grana una volta all’avvio
+  drawNoise(30);
 
-// 3) Al movimento del puntatore (o touch), applichiamo una mask radiale
-let clearTimeoutId;
-function clearGrain(x, y) {
-  clearTimeout(clearTimeoutId);
-  const r = 120; // raggio del “buco” di rumore
-  const mask = `radial-gradient(circle ${r}px at ${x}px ${y}px, transparent 0%, black 100%)`;
-  grain.style.webkitMaskImage = mask;
-  grain.style.maskImage = mask;
-  // dopo 2s rimuoviamo la maschera (riappare il rumore)
-  clearTimeoutId = setTimeout(() => {
-    grain.style.webkitMaskImage = '';
-    grain.style.maskImage = '';
-  }, 2000);
-}
+  // 4) al passaggio del mouse/touch: apri il “buco” radiale
+  let timeoutId;
+  function reveal(x, y) {
+    clearTimeout(timeoutId);
+    // ripristina il rumore completo
+    drawNoise(30);
+    // crea il “foro”: togli pixel tramite compositing
+    ctx.globalCompositeOperation = 'destination-out';
+    const r = 120; // raggio in pixel
+    const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
+    grad.addColorStop(0, 'rgba(0,0,0,1)');
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(x - r, y - r, r * 2, r * 2);
+    // torna al compositing normale
+    ctx.globalCompositeOperation = 'source-over';
+    // dopo 2s ridisegna la grana intera
+    timeoutId = setTimeout(() => drawNoise(30), 2000);
+  }
 
-// 4) Gestiamo mouse e touch
-window.addEventListener('mousemove', e => clearGrain(e.clientX, e.clientY));
-window.addEventListener('touchmove', e => {
-  const t = e.touches[0];
-  clearGrain(t.clientX, t.clientY);
-});
+  window.addEventListener('mousemove', e => reveal(e.clientX, e.clientY));
+  window.addEventListener('touchmove',  e => {
+    const t = e.touches[0];
+    reveal(t.clientX, t.clientY);
+  });
+
+  // 5) opzionale: ridisegna se ridimensioni la finestra
+  window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    drawNoise(30);
+  });
+})();
+      
+      
     </script>
   </body>
 </html>
