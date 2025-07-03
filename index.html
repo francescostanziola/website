@@ -795,218 +795,160 @@
       <p>WEBSITE DERIVED FROM <a href="https://jonbarron.info/">JON BARRON</a> / BRUTALIST INTERPRETATION</p>
     </footer>
 
-    <script>
-      // Easter egg functionality
-      let clickCount = 0;
-      let isExploded = false;
-      let clickTimeout = null;
-      const profileImage = document.getElementById('profileImage');
-      const explosionMessage = document.getElementById('explosionMessage');
+<script>
+  let clickCount = 0;
+  let isExploded = false;
+  let clickTimeout = null;
+  const profileImage = document.getElementById('profileImage');
+  const explosionMessage = document.getElementById('explosionMessage');
 
-      profileImage.addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        if (isExploded) return;
-        
-        clickCount++;
-        
-        // Clear existing timeout
-        if (clickTimeout) {
-          clearTimeout(clickTimeout);
-        }
-        
-        // Set timeout to reset if no more clicks
-        clickTimeout = setTimeout(() => {
-          resetToInitial();
-        }, 2000);
-        
-        if (clickCount <= 2) {
-          // First two clicks - just grow slightly
-          profileImage.style.transform = `scale(${1 + clickCount * 0.05})`;
-          profileImage.style.filter = 'grayscale(0%) contrast(100%)';
-        } else if (clickCount === 3) {
-          // Third click - start light shaking
-          profileImage.style.transform = 'scale(1.1)';
-          profileImage.classList.remove('shaking-intense');
-          profileImage.classList.add('shaking-light');
-        } else if (clickCount >= 4 && clickCount < 6) {
-          // Clicks 4-29 - intense shaking with growing scale
-          profileImage.classList.remove('shaking-light');
-          profileImage.classList.add('shaking-intense');
-          const scaleIncrease = 1.1 + (clickCount - 3) * 0.02;
-          profileImage.style.transform = `scale(${Math.min(scaleIncrease, 1.6)})`;
-        } else if (clickCount >= 6) {
-          // 20th click - EXPLODE!
-          isExploded = true;
-          profileImage.classList.remove('shaking-light', 'shaking-intense');
-          profileImage.classList.add('exploding');
-          
-          // Show explosion message
-          setTimeout(() => {
-            explosionMessage.classList.add('show');
-          }, 150);
-          
-          // Create confetti from image pieces
-          createImageConfetti();
-          
-          // Reset after 6 seconds
-          setTimeout(() => {
-            resetImage();
-          }, 6000);
-        }
-      });
+  profileImage.addEventListener('click', function(e) {
+    e.preventDefault();
+    if (isExploded) return;
 
-      function createImageConfetti() {
-        const confettiCount = 30;
-        const imageRect = profileImage.getBoundingClientRect();
-        
-        for (let i = 0; i < confettiCount; i++) {
-          const confetti = document.createElement('div');
-          confetti.className = 'confetti';
-          confetti.style.width = '20px';
-          confetti.style.height = '20px';
-          confetti.style.backgroundImage = 'url(images/photo.png)';
-          confetti.style.backgroundSize = '600%';
-          confetti.style.backgroundPosition = `${Math.random() * 100}% ${Math.random() * 100}%`;
-          confetti.style.left = (imageRect.left + Math.random() * imageRect.width) + 'px';
-          confetti.style.top = imageRect.top + 'px';
-          confetti.style.animation = `confetti-fall ${2 + Math.random() * 3}s linear forwards`;
-          confetti.style.animationDelay = Math.random() * 0.5 + 's';
-          
-          document.body.appendChild(confetti);
-          
-          // Remove confetti after animation
-          setTimeout(() => {
-            if (confetti.parentNode) {
-              confetti.parentNode.removeChild(confetti);
-            }
-          }, 5000);
-        }
+    clickCount++;
+
+    // Clear existing timeout
+    if (clickTimeout) clearTimeout(clickTimeout);
+
+    // Set reset timer
+    clickTimeout = setTimeout(() => resetToInitial(), 2000);
+
+    if (clickCount < 6) {
+      // Inflate like a plastic bag
+      const scale = 1 + clickCount * 0.08;
+      const rotate = (Math.random() - 0.5) * 5; // random tilt
+      const x = e.offsetX / profileImage.offsetWidth;
+      const y = e.offsetY / profileImage.offsetHeight;
+      const originX = x * 100 + '%';
+      const originY = y * 100 + '%';
+
+      profileImage.style.transformOrigin = `${originX} ${originY}`;
+      profileImage.style.transform = `scale(${scale}) rotate(${rotate}deg)`;
+      profileImage.style.borderRadius = `${Math.min(clickCount * 3, 15)}px`;
+      profileImage.style.filter = 'grayscale(0%) contrast(100%)';
+    } else {
+      // EXPLOSION!
+      isExploded = true;
+      profileImage.classList.add('exploding');
+      profileImage.style.borderRadius = '0';
+
+      setTimeout(() => {
+        explosionMessage.classList.add('show');
+      }, 150);
+
+      setTimeout(() => resetImage(), 6000);
+    }
+  });
+
+  function resetToInitial() {
+    clickCount = 0;
+    profileImage.classList.remove('exploding');
+    profileImage.style.transform = 'scale(1) rotate(0deg)';
+    profileImage.style.filter = 'grayscale(100%) contrast(120%)';
+    profileImage.style.borderRadius = '0';
+    explosionMessage.classList.remove('show');
+    if (clickTimeout) {
+      clearTimeout(clickTimeout);
+      clickTimeout = null;
+    }
+    isExploded = false;
+  }
+
+  function resetImage() {
+    resetToInitial();
+  }
+
+  // Hover animations for content cards
+  document.querySelectorAll('.publication, .event, .position').forEach(element => {
+    element.addEventListener('mouseenter', () => {
+      element.style.transform = element.classList.contains('position') 
+        ? 'translate(-5px, -5px)' 
+        : 'translateX(10px)';
+    });
+    element.addEventListener('mouseleave', () => {
+      element.style.transform = 'none';
+    });
+  });
+
+  // Scroll-in animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
       }
+    });
+  }, { threshold: 0.1 });
 
-      function resetToInitial() {
-        clickCount = 0;
-        profileImage.classList.remove('shaking-light', 'shaking-intense');
-        profileImage.style.transform = 'scale(1)';
-        profileImage.style.filter = 'grayscale(100%) contrast(120%)';
-        if (clickTimeout) {
-          clearTimeout(clickTimeout);
-          clickTimeout = null;
-        }
+  document.querySelectorAll('.section').forEach(section => {
+    section.style.opacity = '0';
+    section.style.transform = 'translateY(50px)';
+    section.style.transition = 'all 0.6s ease';
+    observer.observe(section);
+  });
+
+  // Grain overlay logic (unchanged)
+  (function(){
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const canvas = document.createElement('canvas');
+    canvas.id = 'grain-canvas';
+    canvas.width = w; canvas.height = h;
+    Object.assign(canvas.style, {
+      position: 'fixed',
+      top: 0, left: 0,
+      width: '100vw', height: '100vh',
+      pointerEvents: 'none',
+      zIndex: 9999,
+      background: 'transparent',
+      opacity: 1
+    });
+    document.body.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+
+    function drawNoise(alphaValue = 30) {
+      const img = ctx.createImageData(w, h);
+      for (let i = 0; i < img.data.length; i += 4) {
+        const v = Math.random() * 255;
+        img.data[i] = v;
+        img.data[i + 1] = v;
+        img.data[i + 2] = v;
+        img.data[i + 3] = alphaValue;
       }
+      ctx.putImageData(img, 0, 0);
+    }
 
-      function resetImage() {
-        clickCount = 0;
-        isExploded = false;
-        profileImage.classList.remove('exploding', 'shaking-light', 'shaking-intense');
-        profileImage.style.transform = 'scale(1)';
-        profileImage.style.filter = 'grayscale(100%) contrast(120%)';
-        explosionMessage.classList.remove('show');
-        if (clickTimeout) {
-          clearTimeout(clickTimeout);
-          clickTimeout = null;
-        }
-      }
+    drawNoise(30);
 
-      // Add hover sound effect simulation
-      document.querySelectorAll('.publication, .event, .position').forEach(element => {
-        element.addEventListener('mouseenter', () => {
-          element.style.transform = element.classList.contains('position') 
-            ? 'translate(-5px, -5px)' 
-            : 'translateX(10px)';
-        });
-        
-        element.addEventListener('mouseleave', () => {
-          element.style.transform = 'none';
-        });
-      });
+    let timeoutId;
+    function reveal(x, y) {
+      clearTimeout(timeoutId);
+      drawNoise(30);
+      ctx.globalCompositeOperation = 'destination-out';
+      const r = 120;
+      const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
+      grad.addColorStop(0, 'rgba(0,0,0,1)');
+      grad.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(x - r, y - r, r * 2, r * 2);
+      ctx.globalCompositeOperation = 'source-over';
+      timeoutId = setTimeout(() => drawNoise(30), 2000);
+    }
 
-      // Intersection observer for animations
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-          }
-        });
-      }, { threshold: 0.1 });
+    window.addEventListener('mousemove', e => reveal(e.clientX, e.clientY));
+    window.addEventListener('touchmove',  e => {
+      const t = e.touches[0];
+      reveal(t.clientX, t.clientY);
+    });
 
-      document.querySelectorAll('.section').forEach(section => {
-        section.style.opacity = '0';
-        section.style.transform = 'translateY(50px)';
-        section.style.transition = 'all 0.6s ease';
-        observer.observe(section);
-      });
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      drawNoise(30);
+    });
+  })();
+</script>
 
-      // Grain effect
-      (function(){
-        // 1) crea e posiziona il canvas a tutta pagina
-        const w = window.innerWidth;
-        const h = window.innerHeight;
-        const canvas = document.createElement('canvas');
-        canvas.id = 'grain-canvas';
-        canvas.width = w; canvas.height = h;
-        Object.assign(canvas.style, {
-          position: 'fixed',
-          top: 0, left: 0,
-          width: '100vw', height: '100vh',
-          pointerEvents: 'none',
-          zIndex: 9999,
-          background: 'transparent',
-          opacity: 1       // regola qui, ad es. 0.8 o 0.6 se è troppo forte
-        });
-        document.body.appendChild(canvas);
-        const ctx = canvas.getContext('2d');
-
-        // 2) funzione per ridisegnare la grana
-        function drawNoise(alphaValue = 30) {
-          const img = ctx.createImageData(w, h);
-          for (let i = 0; i < img.data.length; i += 4) {
-            const v = Math.random() * 255;
-            img.data[i]     = v;
-            img.data[i + 1] = v;
-            img.data[i + 2] = v;
-            img.data[i + 3] = alphaValue; // 0–255: più alto = grana più visibile
-          }
-          ctx.putImageData(img, 0, 0);
-        }
-
-        // 3) disegna la grana una volta all'avvio
-        drawNoise(30);
-
-        // 4) al passaggio del mouse/touch: apri il "buco" radiale
-        let timeoutId;
-        function reveal(x, y) {
-          clearTimeout(timeoutId);
-          // ripristina il rumore completo
-          drawNoise(30);
-          // crea il "foro": togli pixel tramite compositing
-          ctx.globalCompositeOperation = 'destination-out';
-          const r = 120; // raggio in pixel
-          const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
-          grad.addColorStop(0, 'rgba(0,0,0,1)');
-          grad.addColorStop(1, 'rgba(0,0,0,0)');
-          ctx.fillStyle = grad;
-          ctx.fillRect(x - r, y - r, r * 2, r * 2);
-          // torna al compositing normale
-          ctx.globalCompositeOperation = 'source-over';
-          // dopo 2s ridisegna la grana intera
-          timeoutId = setTimeout(() => drawNoise(30), 2000);
-        }
-
-        window.addEventListener('mousemove', e => reveal(e.clientX, e.clientY));
-        window.addEventListener('touchmove',  e => {
-          const t = e.touches[0];
-          reveal(t.clientX, t.clientY);
-        });
-
-        // 5) opzionale: ridisegna se ridimensioni la finestra
-        window.addEventListener('resize', () => {
-          canvas.width = window.innerWidth;
-          canvas.height = window.innerHeight;
-          drawNoise(30);
-        });
-      })();
-    </script>
   </body>
 </html>
