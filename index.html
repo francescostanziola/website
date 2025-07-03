@@ -829,13 +829,13 @@
           profileImage.style.transform = 'scale(1.1)';
           profileImage.classList.remove('shaking-intense');
           profileImage.classList.add('shaking-light');
-        } else if (clickCount >= 4 && clickCount < 10) {
+        } else if (clickCount >= 4 && clickCount < 6) {
           // Clicks 4-29 - intense shaking with growing scale
           profileImage.classList.remove('shaking-light');
           profileImage.classList.add('shaking-intense');
           const scaleIncrease = 1.1 + (clickCount - 3) * 0.02;
           profileImage.style.transform = `scale(${Math.min(scaleIncrease, 1.6)})`;
-        } else if (clickCount >= 10) {
+        } else if (clickCount >= 6) {
           // 20th click - EXPLODE!
           isExploded = true;
           profileImage.classList.remove('shaking-light', 'shaking-intense');
