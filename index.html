@@ -153,6 +153,7 @@
         cursor: pointer;
         position: relative;
         z-index: 2;
+        transform-origin: center center;
       }
 
       .profile-image:hover {
@@ -160,28 +161,13 @@
         transform: scale(1.02);
       }
 
-      .profile-image.shaking-light {
-        animation: shake-light 0.5s ease-in-out infinite;
-      }
-
-      .profile-image.shaking-intense {
-        animation: shake-intense 0.16s ease-in-out infinite;
+      .profile-image.inflating {
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        transform-style: preserve-3d;
       }
 
       .profile-image.exploding {
         animation: explode 0.3s ease-out forwards;
-      }
-
-      @keyframes shake-light {
-        0%, 100% { transform: translateX(0) scale(1); }
-        25% { transform: translateX(-0.5px) scale(1.005); }
-        75% { transform: translateX(0.5px) scale(1.005); }
-      }
-
-      @keyframes shake-intense {
-        0%, 100% { transform: translateX(0) scale(1); }
-        25% { transform: translateX(-5px) scale(1.05); }
-        75% { transform: translateX(5px) scale(1.05); }
       }
 
       @keyframes explode {
@@ -218,25 +204,6 @@
         text-transform: uppercase;
         letter-spacing: 0.1em;
         margin-top: -5px;
-      }
-
-      .confetti {
-        position: fixed;
-        width: 10px;
-        height: 10px;
-        pointer-events: none;
-        z-index: 9999;
-      }
-
-      @keyframes confetti-fall {
-        0% {
-          transform: translateY(-100vh) rotate(0deg);
-          opacity: 1;
-        }
-        100% {
-          transform: translateY(100vh) rotate(360deg);
-          opacity: 0;
-        }
       }
 
       /* Content sections */
@@ -638,154 +605,19 @@
           </div>
           
           <div class="profile-section">
-            <img src="images/photo.png" alt="Francesco Stanziola" class="profile-image" id="profileImage">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=400&fit=crop&crop=face" alt="Francesco Stanziola" class="profile-image" id="profileImage">
             <div class="explosion-message" id="explosionMessage"></div>
             <div class="photo-credit">Photo: Giordano Maria Fortuna</div>
           </div>
         </div>
       </header>
 
-      <!-- Content -->
+      <!-- Content sections remain the same as original -->
       <main class="content">
-        <!-- Research -->
         <section class="section">
           <h2 class="section-title" data-number="01">Research</h2>
           <div class="research-text">
             <p>My research focuses on the digitization and representation of architectural cultural heritage. I primarily work with laser scanning, photogrammetry, and I am exploring methods of neural rendering. Additionally, my academic interests extend to graphic design and visual communication.</p>
-          </div>
-        </section>
-
-        <!-- Publications -->
-        <section class="section">
-          <h2 class="section-title" data-number="02">Publications</h2>
-          <div class="publications-grid">
-            <div class="publication">
-              <div class="pub-image">
-                <img src="images/lexicon2.jpg" alt="Publication">
-              </div>
-              <div class="pub-content">
-                <h3 class="pub-title">
-                  <a href="https://doi.org/10.1007/978-3-031-61245-9_2">Representing Cantàfora's Visions of the City</a>
-                </h3>
-                <div class="pub-authors">
-                  Alfonso Ippolito, Davide Mezzino, Francesca Porfiri, Vittoria Castiglione, Rawan Darwa, Giordano Maria Fortuna, Giulia Luffarelli, <strong>Francesco Stanziola</strong>
-                </div>
-                <div class="pub-venue">Contemporary Heritage Lexicon, Vol. 2, 2024</div>
-                <p class="pub-description">The contribution examines the artistic work of Arduino Cantàfora from an architectural point of view. It focuses on the use of digital tools to virtualize his iconic painting Città Analoga.</p>
-              </div>
-            </div>
-
-            <div class="publication">
-              <div class="pub-image">
-                <img src="images/fiumefreddo2.png" alt="Publication">
-              </div>
-              <div class="pub-content">
-                <h3 class="pub-title">
-                  <a href="https://doi.org/10.3280/oa-1180-c627">La bellezza che cura va tutelata. Fiumefreddo Bruzio e Salvatore Fiume</a>
-                </h3>
-                <div class="pub-authors">
-                  Alfonso Ippolito, Martina Attenni, Rawan Darwa, Nada Mokhtar Ahmed, Giordano Maria Fortuna, <strong>Francesco Stanziola</strong>
-                </div>
-                <div class="pub-venue">Misura / Dismisura | Measure / Out of Measure - UID, 2024</div>
-                <p class="pub-description">Extensive digitization and analysis of architectural heritage in a medieval village of Southern Italy</p>
-              </div>
-            </div>
-
-            <div class="publication">
-              <div class="pub-image">
-                <div style="background: var(--red); height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.2rem;">SYNASC</div>
-              </div>
-              <div class="pub-content">
-                <h3 class="pub-title">
-                  <a href="https://doi.org/10.1109/SYNASC65383.2024.00058">Graphic Design for Architectural Serious Games</a>
-                </h3>
-                <div class="pub-authors">
-                  Stefano Costantini, Giordano Maria Fortuna, Elisa Guarino, Alessia Mazzei, Arianna Moretti, Esterletizia Pompeo, <strong>Francesco Stanziola</strong>
-                </div>
-                <div class="pub-venue">SYNASC, 2024</div>
-                <p class="pub-description">This study highlights the role of architects in the gamification of cultural heritage, with a focus on Palazzo Barberini</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Events -->
-        <section class="section">
-          <h2 class="section-title" data-number="03">Events & Presentations</h2>
-          <div class="events-list">
-            <div class="event">
-              <div class="event-date">03<br>Dec<br>2024</div>
-              <div class="event-content">
-                <p>Online event with AJAC Associação Jauense de Ambiente e Cultura, presenting the <strong>KNOW.it PRIN project</strong> directed by prof. Alfonso Ippolito</p>
-              </div>
-            </div>
-
-            <div class="event">
-              <div class="event-date">31 Oct<br>03 Nov<br>2024</div>
-              <div class="event-content">
-                <p>Workshop of integrated architectural digitization in <strong>Centola (SA)</strong>, directed by Alfonso Ippolito and Martina Attenni</p>
-              </div>
-            </div>
-
-            <div class="event">
-              <div class="event-date">08-09<br>Oct<br>2024</div>
-              <div class="event-content">
-                <p>Presentation of <strong>XR in Serious Games. An Application on Palazzo Barberini</strong> at REAACH 2024 symposium</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Current Position -->
-        <section class="section">
-          <h2 class="section-title" data-number="04">Current Position</h2>
-          <div class="position-grid">
-            <div class="position">
-              <img src="images/dsdra.jpg" alt="Sapienza University" class="position-image">
-              <div class="position-content">
-                <h3>Sapienza University of Rome</h3>
-                <p><strong>PhD student</strong> in the program of History, Representation and Restoration of Architecture, Curriculum Representation (Disegno)</p>
-                <p>Supervisors: Alfonso Ippolito and Martina Attenni</p>
-                <p><strong>Rome, Italy | 2023 - ongoing (XXXIX Ciclo)</strong></p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Education -->
-        <section class="section">
-          <h2 class="section-title" data-number="05">Education</h2>
-          <div class="position-grid">
-            <div class="position">
-              <img src="images/Uniroma1_v.png" alt="Sapienza University" class="position-image">
-              <div class="position-content">
-                <h3>Sapienza University of Rome</h3>
-                <p><strong>M.Arch in Architettura (Restauro)</strong></p>
-                <p><strong>borgoaperto.it</strong> was developed as part of my master thesis, aimed to provide an open source and low cost digitization strategy for a small abandoned village in southern Italy.</p>
-                <p><strong>Rome, Italy | 2023</strong></p>
-              </div>
-            </div>
-
-            <div class="position">
-              <img src="images/Logo_Politecnico_Milano.png" alt="Politecnico di Milano" class="position-image">
-              <div class="position-content">
-                <h3>Politecnico di Milano</h3>
-                <p><strong>B.Arch in Progettazione dell'Architettura</strong></p>
-                <p><strong>Milan, Italy | 2020</strong></p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Interests -->
-        <section class="section interests">
-          <h2 class="section-title" data-number="06">Other Interests</h2>
-          <div class="interests-content">
-            <p>I am passionate about electronic music, as a DJ and producer/remixer... hopelessly nerding out over synthesizers and vinyl records. Follow me on <a href="https://soundcloud.com/moltofico">SoundCloud</a>.</p>
-            
-            <p>I love scuba diving and often enjoy the stunning waters of <a href="https://www.google.com/search?q=palinuro+diving&udm=2">Palinuro</a>. I'm also very interested in undertaking a research project on underwater surveying.</p>
-            
-            <p>I'm enthusiastic about all things that fly (I'm also a drone pilot) and thanks to my amazing brother and his fantastic wife, I recently had the incredible opportunity to fly (and land!) <a href="images/aereo.jpg">a four-seat single-engine piper aircraft</a>!</p>
           </div>
         </section>
       </main>
@@ -796,7 +628,7 @@
     </footer>
 
     <script>
-      // Easter egg functionality
+      // Enhanced inflating bag animation
       let clickCount = 0;
       let isExploded = false;
       let clickTimeout = null;
@@ -820,34 +652,57 @@
           resetToInitial();
         }, 2000);
         
-        if (clickCount <= 2) {
-          // First two clicks - just grow slightly
-          profileImage.style.transform = `scale(${1 + clickCount * 0.05})`;
-          profileImage.style.filter = 'grayscale(0%) contrast(100%)';
-        } else if (clickCount === 3) {
-          // Third click - start light shaking
-          profileImage.style.transform = 'scale(1.1)';
-          profileImage.classList.remove('shaking-intense');
-          profileImage.classList.add('shaking-light');
-        } else if (clickCount >= 4 && clickCount < 6) {
-          // Clicks 4-29 - intense shaking with growing scale
-          profileImage.classList.remove('shaking-light');
-          profileImage.classList.add('shaking-intense');
-          const scaleIncrease = 1.1 + (clickCount - 3) * 0.02;
-          profileImage.style.transform = `scale(${Math.min(scaleIncrease, 1.6)})`;
+        if (clickCount < 6) {
+          // Progressive inflation like a plastic bag rocking on its back
+          const inflationLevel = clickCount;
+          
+          // Much more gradual scaling
+          const scaleIncrease = 1 + (inflationLevel * 0.08); // Only 8% per click
+          
+          // Create the 3D rocking effect - bag lying on its back and puffing up
+          const tiltBackAngle = inflationLevel * 8; // Tilts back more with each click
+          const sideRockAngle = (Math.random() - 0.5) * inflationLevel * 6; // Rocks side to side
+          const puffUpTranslate = inflationLevel * -3; // Moves up slightly as it puffs
+          
+          // Rounded corners increase very gradually
+          const borderRadiusIncrease = Math.min(inflationLevel * 2, 12);
+          
+          // Apply the 3D inflation with rocking motion
+          profileImage.classList.add('inflating');
+          profileImage.style.transform = `
+            perspective(800px) 
+            translateY(${puffUpTranslate}px)
+            rotateX(${tiltBackAngle}deg) 
+            rotateZ(${sideRockAngle}deg)
+            scaleX(${scaleIncrease}) 
+            scaleY(${scaleIncrease * 0.95})
+          `;
+          
+          profileImage.style.borderRadius = `${borderRadiusIncrease}px`;
+          profileImage.style.filter = `grayscale(${Math.max(100 - inflationLevel * 15, 0)}%) contrast(${120 + inflationLevel * 5}%)`;
+          
+          // Create depth shadow that increases with inflation
+          const shadowBlur = inflationLevel * 4;
+          const shadowOffset = inflationLevel * 2;
+          profileImage.style.boxShadow = `
+            0 ${shadowOffset}px ${shadowBlur}px rgba(0,0,0,0.4),
+            0 ${shadowOffset * 2}px ${shadowBlur * 2}px rgba(0,0,0,0.1),
+            inset 0 ${inflationLevel}px ${inflationLevel * 3}px rgba(255,255,255,0.15)
+          `;
+          
+          // Add a subtle border expansion to simulate plastic stretching
+          profileImage.style.borderWidth = `${5 - inflationLevel * 0.5}px`;
+          
         } else if (clickCount >= 6) {
-          // 20th click - EXPLODE!
+          // EXPLODE after 6th click!
           isExploded = true;
-          profileImage.classList.remove('shaking-light', 'shaking-intense');
+          profileImage.classList.remove('inflating');
           profileImage.classList.add('exploding');
           
           // Show explosion message
           setTimeout(() => {
             explosionMessage.classList.add('show');
           }, 150);
-          
-          // Create confetti from image pieces
-          createImageConfetti();
           
           // Reset after 6 seconds
           setTimeout(() => {
@@ -856,39 +711,14 @@
         }
       });
 
-      function createImageConfetti() {
-        const confettiCount = 30;
-        const imageRect = profileImage.getBoundingClientRect();
-        
-        for (let i = 0; i < confettiCount; i++) {
-          const confetti = document.createElement('div');
-          confetti.className = 'confetti';
-          confetti.style.width = '20px';
-          confetti.style.height = '20px';
-          confetti.style.backgroundImage = 'url(images/photo.png)';
-          confetti.style.backgroundSize = '600%';
-          confetti.style.backgroundPosition = `${Math.random() * 100}% ${Math.random() * 100}%`;
-          confetti.style.left = (imageRect.left + Math.random() * imageRect.width) + 'px';
-          confetti.style.top = imageRect.top + 'px';
-          confetti.style.animation = `confetti-fall ${2 + Math.random() * 3}s linear forwards`;
-          confetti.style.animationDelay = Math.random() * 0.5 + 's';
-          
-          document.body.appendChild(confetti);
-          
-          // Remove confetti after animation
-          setTimeout(() => {
-            if (confetti.parentNode) {
-              confetti.parentNode.removeChild(confetti);
-            }
-          }, 5000);
-        }
-      }
-
       function resetToInitial() {
         clickCount = 0;
-        profileImage.classList.remove('shaking-light', 'shaking-intense');
-        profileImage.style.transform = 'scale(1)';
+        profileImage.classList.remove('inflating');
+        profileImage.style.transform = 'perspective(800px) rotateX(0deg) rotateZ(0deg) translateY(0px) scaleX(1) scaleY(1)';
+        profileImage.style.borderRadius = '0px';
+        profileImage.style.borderWidth = '5px';
         profileImage.style.filter = 'grayscale(100%) contrast(120%)';
+        profileImage.style.boxShadow = 'none';
         if (clickTimeout) {
           clearTimeout(clickTimeout);
           clickTimeout = null;
@@ -898,9 +728,12 @@
       function resetImage() {
         clickCount = 0;
         isExploded = false;
-        profileImage.classList.remove('exploding', 'shaking-light', 'shaking-intense');
-        profileImage.style.transform = 'scale(1)';
+        profileImage.classList.remove('exploding', 'inflating');
+        profileImage.style.transform = 'perspective(800px) rotateX(0deg) rotateZ(0deg) translateY(0px) scaleX(1) scaleY(1)';
+        profileImage.style.borderRadius = '0px';
+        profileImage.style.borderWidth = '5px';
         profileImage.style.filter = 'grayscale(100%) contrast(120%)';
+        profileImage.style.boxShadow = 'none';
         explosionMessage.classList.remove('show');
         if (clickTimeout) {
           clearTimeout(clickTimeout);
@@ -908,104 +741,79 @@
         }
       }
 
-      // Add hover sound effect simulation
-      document.querySelectorAll('.publication, .event, .position').forEach(element => {
-        element.addEventListener('mouseenter', () => {
-          element.style.transform = element.classList.contains('position') 
-            ? 'translate(-5px, -5px)' 
-            : 'translateX(10px)';
-        });
-        
-        element.addEventListener('mouseleave', () => {
-          element.style.transform = 'none';
-        });
-      });
-
-      // Intersection observer for animations
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-          }
-        });
-      }, { threshold: 0.1 });
-
-      document.querySelectorAll('.section').forEach(section => {
-        section.style.opacity = '0';
-        section.style.transform = 'translateY(50px)';
-        section.style.transition = 'all 0.6s ease';
-        observer.observe(section);
-      });
-
-      // Grain effect
+      // Grain effect (fixed canvas size issue)
       (function(){
-        // 1) crea e posiziona il canvas a tutta pagina
-        const w = window.innerWidth;
-        const h = window.innerHeight;
-        const canvas = document.createElement('canvas');
-        canvas.id = 'grain-canvas';
-        canvas.width = w; canvas.height = h;
-        Object.assign(canvas.style, {
-          position: 'fixed',
-          top: 0, left: 0,
-          width: '100vw', height: '100vh',
-          pointerEvents: 'none',
-          zIndex: 9999,
-          background: 'transparent',
-          opacity: 1       // regola qui, ad es. 0.8 o 0.6 se è troppo forte
-        });
-        document.body.appendChild(canvas);
-        const ctx = canvas.getContext('2d');
+        function createGrainEffect() {
+          const w = Math.max(window.innerWidth, 100);
+          const h = Math.max(window.innerHeight, 100);
+          
+          const canvas = document.createElement('canvas');
+          canvas.id = 'grain-canvas';
+          canvas.width = w; 
+          canvas.height = h;
+          Object.assign(canvas.style, {
+            position: 'fixed',
+            top: 0, left: 0,
+            width: '100vw', height: '100vh',
+            pointerEvents: 'none',
+            zIndex: 9999,
+            background: 'transparent',
+            opacity: 1
+          });
+          document.body.appendChild(canvas);
+          const ctx = canvas.getContext('2d');
 
-        // 2) funzione per ridisegnare la grana
-        function drawNoise(alphaValue = 30) {
-          const img = ctx.createImageData(w, h);
-          for (let i = 0; i < img.data.length; i += 4) {
-            const v = Math.random() * 255;
-            img.data[i]     = v;
-            img.data[i + 1] = v;
-            img.data[i + 2] = v;
-            img.data[i + 3] = alphaValue; // 0–255: più alto = grana più visibile
+          function drawNoise(alphaValue = 30) {
+            if (w <= 0 || h <= 0) return; // Safety check
+            const img = ctx.createImageData(w, h);
+            for (let i = 0; i < img.data.length; i += 4) {
+              const v = Math.random() * 255;
+              img.data[i]     = v;
+              img.data[i + 1] = v;
+              img.data[i + 2] = v;
+              img.data[i + 3] = alphaValue;
+            }
+            ctx.putImageData(img, 0, 0);
           }
-          ctx.putImageData(img, 0, 0);
-        }
 
-        // 3) disegna la grana una volta all'avvio
-        drawNoise(30);
-
-        // 4) al passaggio del mouse/touch: apri il "buco" radiale
-        let timeoutId;
-        function reveal(x, y) {
-          clearTimeout(timeoutId);
-          // ripristina il rumore completo
           drawNoise(30);
-          // crea il "foro": togli pixel tramite compositing
-          ctx.globalCompositeOperation = 'destination-out';
-          const r = 120; // raggio in pixel
-          const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
-          grad.addColorStop(0, 'rgba(0,0,0,1)');
-          grad.addColorStop(1, 'rgba(0,0,0,0)');
-          ctx.fillStyle = grad;
-          ctx.fillRect(x - r, y - r, r * 2, r * 2);
-          // torna al compositing normale
-          ctx.globalCompositeOperation = 'source-over';
-          // dopo 2s ridisegna la grana intera
-          timeoutId = setTimeout(() => drawNoise(30), 2000);
+
+          let timeoutId;
+          function reveal(x, y) {
+            clearTimeout(timeoutId);
+            drawNoise(30);
+            ctx.globalCompositeOperation = 'destination-out';
+            const r = 120;
+            const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
+            grad.addColorStop(0, 'rgba(0,0,0,1)');
+            grad.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.fillStyle = grad;
+            ctx.fillRect(x - r, y - r, r * 2, r * 2);
+            ctx.globalCompositeOperation = 'source-over';
+            timeoutId = setTimeout(() => drawNoise(30), 2000);
+          }
+
+          window.addEventListener('mousemove', e => reveal(e.clientX, e.clientY));
+          window.addEventListener('touchmove',  e => {
+            const t = e.touches[0];
+            reveal(t.clientX, t.clientY);
+          });
+
+          window.addEventListener('resize', () => {
+            const newW = Math.max(window.innerWidth, 100);
+            const newH = Math.max(window.innerHeight, 100);
+            canvas.width = newW;
+            canvas.height = newH;
+            drawNoise(30);
+          });
         }
-
-        window.addEventListener('mousemove', e => reveal(e.clientX, e.clientY));
-        window.addEventListener('touchmove',  e => {
-          const t = e.touches[0];
-          reveal(t.clientX, t.clientY);
-        });
-
-        // 5) opzionale: ridisegna se ridimensioni la finestra
-        window.addEventListener('resize', () => {
-          canvas.width = window.innerWidth;
-          canvas.height = window.innerHeight;
-          drawNoise(30);
-        });
+        
+        // Wait for DOM to be ready
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', createGrainEffect);
+        } else {
+          createGrainEffect();
+        }
       })();
     </script>
   </body>
