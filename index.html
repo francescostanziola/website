@@ -142,6 +142,8 @@
         align-self: start;
         margin-top: 2rem;
         position: relative;
+        perspective: 1200px;
+        perspective-origin: center center;
       }
 
       .profile-image {
@@ -153,7 +155,8 @@
         cursor: pointer;
         position: relative;
         z-index: 2;
-        transform-origin: center center;
+        transform-origin: center bottom;
+        transform-style: preserve-3d;
       }
 
       .profile-image:hover {
@@ -162,8 +165,20 @@
       }
 
       .profile-image.inflating {
-        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         transform-style: preserve-3d;
+      }
+
+      .profile-image.rocking {
+        animation: rockingMotion 2s ease-in-out infinite;
+      }
+
+      @keyframes rockingMotion {
+        0% { transform: rotateX(0deg) rotateZ(0deg); }
+        25% { transform: rotateX(-5deg) rotateZ(2deg); }
+        50% { transform: rotateX(0deg) rotateZ(0deg); }
+        75% { transform: rotateX(-5deg) rotateZ(-2deg); }
+        100% { transform: rotateX(0deg) rotateZ(0deg); }
       }
 
       .profile-image.exploding {
@@ -605,7 +620,7 @@
           </div>
           
           <div class="profile-section">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=400&fit=crop&crop=face" alt="Francesco Stanziola" class="profile-image" id="profileImage">
+            <img src="images/photo.png" alt="Francesco Stanziola" class="profile-image" id="profileImage">
             <div class="explosion-message" id="explosionMessage"></div>
             <div class="photo-credit">Photo: Giordano Maria Fortuna</div>
           </div>
@@ -657,41 +672,52 @@
           const inflationLevel = clickCount;
           
           // Much more gradual scaling
-          const scaleIncrease = 1 + (inflationLevel * 0.08); // Only 8% per click
+          const scaleIncrease = 1 + (inflationLevel * 0.06); // Even more gradual
           
-          // Create the 3D rocking effect - bag lying on its back and puffing up
-          const tiltBackAngle = inflationLevel * 8; // Tilts back more with each click
-          const sideRockAngle = (Math.random() - 0.5) * inflationLevel * 6; // Rocks side to side
-          const puffUpTranslate = inflationLevel * -3; // Moves up slightly as it puffs
+          // Create REAL 3D effect - bag lying flat and puffing up from the bottom
+          const liftUpAngle = inflationLevel * 12; // Lifts up from bottom edge like inflating
+          const puffHeight = inflationLevel * 15; // Moves up as it inflates
+          const depthRotation = inflationLevel * 3; // Slight depth rotation
+          
+          // Random rocking on each click
+          const rockDirection = (Math.random() > 0.5 ? 1 : -1);
+          const rockIntensity = inflationLevel * 3;
           
           // Rounded corners increase very gradually
-          const borderRadiusIncrease = Math.min(inflationLevel * 2, 12);
+          const borderRadiusIncrease = Math.min(inflationLevel * 3, 15);
           
-          // Apply the 3D inflation with rocking motion
+          // Apply the 3D inflation with proper perspective
           profileImage.classList.add('inflating');
+          
+          // The key is using rotateX to lift from the bottom like a bag inflating
           profileImage.style.transform = `
-            perspective(800px) 
-            translateY(${puffUpTranslate}px)
-            rotateX(${tiltBackAngle}deg) 
-            rotateZ(${sideRockAngle}deg)
+            translateZ(${puffHeight}px)
+            translateY(${-puffHeight * 0.3}px)
+            rotateX(${-liftUpAngle}deg)
+            rotateY(${depthRotation * rockDirection}deg)
+            rotateZ(${rockIntensity * rockDirection * 0.5}deg)
             scaleX(${scaleIncrease}) 
-            scaleY(${scaleIncrease * 0.95})
+            scaleY(${scaleIncrease})
+            scaleZ(${1 + inflationLevel * 0.1})
           `;
           
           profileImage.style.borderRadius = `${borderRadiusIncrease}px`;
           profileImage.style.filter = `grayscale(${Math.max(100 - inflationLevel * 15, 0)}%) contrast(${120 + inflationLevel * 5}%)`;
           
-          // Create depth shadow that increases with inflation
-          const shadowBlur = inflationLevel * 4;
-          const shadowOffset = inflationLevel * 2;
+          // Create realistic bag shadow - projects behind and below
+          const shadowBlur = inflationLevel * 8;
+          const shadowSpread = inflationLevel * 3;
+          const shadowOffset = inflationLevel * 4;
           profileImage.style.boxShadow = `
             0 ${shadowOffset}px ${shadowBlur}px rgba(0,0,0,0.4),
-            0 ${shadowOffset * 2}px ${shadowBlur * 2}px rgba(0,0,0,0.1),
-            inset 0 ${inflationLevel}px ${inflationLevel * 3}px rgba(255,255,255,0.15)
+            0 ${shadowOffset * 2}px ${shadowBlur * 1.5}px rgba(0,0,0,0.2),
+            inset 0 ${inflationLevel * 2}px ${inflationLevel * 4}px rgba(255,255,255,0.2)
           `;
           
-          // Add a subtle border expansion to simulate plastic stretching
-          profileImage.style.borderWidth = `${5 - inflationLevel * 0.5}px`;
+          // Add continuous rocking animation after 3rd click
+          if (inflationLevel >= 3) {
+            profileImage.classList.add('rocking');
+          }
           
         } else if (clickCount >= 6) {
           // EXPLODE after 6th click!
@@ -713,10 +739,9 @@
 
       function resetToInitial() {
         clickCount = 0;
-        profileImage.classList.remove('inflating');
-        profileImage.style.transform = 'perspective(800px) rotateX(0deg) rotateZ(0deg) translateY(0px) scaleX(1) scaleY(1)';
+        profileImage.classList.remove('inflating', 'rocking');
+        profileImage.style.transform = 'translateZ(0px) translateY(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scaleX(1) scaleY(1) scaleZ(1)';
         profileImage.style.borderRadius = '0px';
-        profileImage.style.borderWidth = '5px';
         profileImage.style.filter = 'grayscale(100%) contrast(120%)';
         profileImage.style.boxShadow = 'none';
         if (clickTimeout) {
@@ -728,10 +753,9 @@
       function resetImage() {
         clickCount = 0;
         isExploded = false;
-        profileImage.classList.remove('exploding', 'inflating');
-        profileImage.style.transform = 'perspective(800px) rotateX(0deg) rotateZ(0deg) translateY(0px) scaleX(1) scaleY(1)';
+        profileImage.classList.remove('exploding', 'inflating', 'rocking');
+        profileImage.style.transform = 'translateZ(0px) translateY(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scaleX(1) scaleY(1) scaleZ(1)';
         profileImage.style.borderRadius = '0px';
-        profileImage.style.borderWidth = '5px';
         profileImage.style.filter = 'grayscale(100%) contrast(120%)';
         profileImage.style.boxShadow = 'none';
         explosionMessage.classList.remove('show');
